@@ -61,6 +61,20 @@ docker run -d \
 
 You only need to mount `/data/WS/Saved` because both save files and `Config` live inside that directory. Recreating the container will not wipe the world data or server settings.
 
+## GameXishu Editor
+
+If you want to edit `GameXishu.json`, open [GameXishuEditor.html](GameXishuEditor.html) directly:
+
+1. You can load the built-in default without importing any file first.
+2. You can also import your own `GameXishu.json`.
+3. Pick Casual / Easy / Normal / Hard / Master, and the editor will apply the matching Defaults per Difficulty to the loaded data.
+4. Edit the fields you want to change, and the editor will show the reference range and difficulty presets.
+5. Use "Save As" to download a new JSON file.
+
+If your browser blocks reading the bundled default file from the same folder, use "Import and load" instead.
+
+This editor is fully client-side and does not need a backend service.
+
 ## Notes
 
 This image downloads and installs the Soulmask dedicated server first, then launches the server entry script. If the official launcher name changes, update the launcher search rules in [docker-entrypoint.sh](docker-entrypoint.sh).

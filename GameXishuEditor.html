@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soulmask GameXishu 編輯器</title>
+    <style>
+        :root {
+            --bg: #09111f;
+            --bg2: #101b2f;
+            --panel: rgba(12, 20, 34, 0.86);
+            --panel-soft: rgba(18, 28, 46, 0.92);
+            --line: rgba(148, 163, 184, 0.18);
+            --text: #e5eefc;
+            --muted: #9db0d1;
+            --accent: #7dd3fc;
+            --accent2: #a78bfa;
+            --good: #34d399;
+            --warn: #fbbf24;
+            --danger: #fb7185;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", "Microsoft JhengHei", "PingFang TC", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(125, 211, 252, 0.16), transparent 26%),
+                radial-gradient(circle at top right, rgba(167, 139, 250, 0.16), transparent 24%),
+                linear-gradient(180deg, var(--bg), var(--bg2));
+            color: var(--text);
+        }
+
+        .app {
+            min-height: 100%;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+        }
+
+        .sidebar {
+            padding: 24px;
+            border-right: 1px solid var(--line);
+            background: rgba(7, 12, 22, 0.72);
+            backdrop-filter: blur(18px);
+        }
+
+        .brand {
+            padding: 20px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(167, 139, 250, 0.16));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .brand h1 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .filebox,
+        .searchbox,
+        .panel,
+        .sectionCard {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .filebox,
+        .searchbox,
+        .panel {
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .fileActions {
+            display: grid;
+            gap: 10px;
+        }
+
+        .fileName {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .fileHint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            letter-spacing: 0.08em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(3, 7, 18, 0.54);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color .2s, transform .2s, background .2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: rgba(125, 211, 252, 0.8);
+            background: rgba(3, 7, 18, 0.72);
+        }
+
+        .path {
+            font-size: 12px;
+            color: var(--muted);
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: grid;
+            gap: 10px;
+        }
+
+        .btn {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(167, 139, 250, 0.16));
+            color: var(--text);
+            padding: 11px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(125, 211, 252, 0.6);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn.good {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.22), rgba(16, 185, 129, 0.18));
+        }
+
+        .btn.warn {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.15));
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            color: var(--muted);
+            font-weight: 600;
+            transition: .18s ease;
+        }
+
+        .tab.active {
+            color: #08131f;
+            background: linear-gradient(135deg, var(--accent), #d9f99d);
+            border-color: transparent;
+        }
+
+        .main {
+            padding: 24px;
+            overflow: auto;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: start;
+            margin-bottom: 18px;
+        }
+
+        .heroCard {
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(16, 24, 39, 0.92), rgba(17, 24, 39, 0.76));
+            box-shadow: var(--shadow);
+        }
+
+        .heroCard h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .heroCard p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(110px, 1fr));
+            gap: 10px;
+            min-width: 360px;
+        }
+
+        .stat {
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(12, 20, 34, 0.92);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .stat .value {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .stat .name {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .sectionCard {
+            padding: 18px;
+        }
+
+        .sectionHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .sectionHeader h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .sectionHeader .small {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .metaRow {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .chip {
+            font-size: 12px;
+            color: #c7d2fe;
+            background: rgba(99, 102, 241, 0.14);
+            border: 1px solid rgba(99, 102, 241, 0.24);
+            padding: 6px 10px;
+            border-radius: 999px;
+        }
+
+        .fieldList {
+            display: grid;
+            gap: 12px;
+        }
+
+        .fieldCard {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--panel-soft);
+            padding: 14px;
+            display: grid;
+            grid-template-columns: minmax(240px, 1.1fr) minmax(220px, 0.9fr);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .fieldCard.changed {
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12) inset;
+        }
+
+        .fieldTitle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .fieldTitle .key {
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .fieldTitle .kind {
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: rgba(125, 211, 252, 0.13);
+            color: #cffafe;
+            border: 1px solid rgba(125, 211, 252, 0.2);
+        }
+
+        .fieldDesc {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .fieldMeta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .metaChip {
+            font-size: 11px;
+            color: #dbeafe;
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.24);
+            padding: 4px 8px;
+            border-radius: 999px;
+        }
+
+        .fieldValueBox {
+            display: grid;
+            gap: 10px;
+        }
+
+        .valueRow {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .valueRow .miniBtn {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .valueRow .miniBtn:hover {
+            border-color: rgba(125, 211, 252, 0.5);
+        }
+
+        .changedBadge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #fef3c7;
+            font-size: 12px;
+            width: fit-content;
+        }
+
+        .footerHint {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .notice {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            white-space: pre-wrap;
+        }
+
+        .notice.good {
+            color: #bbf7d0;
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .notice.warn {
+            color: #fde68a;
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .notice.error {
+            color: #fecaca;
+            border-color: rgba(251, 113, 133, 0.2);
+        }
+
+        .searchRow {
+            display: grid;
+            gap: 10px;
+        }
+
+        .toggleRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        .switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch input {
+            accent-color: var(--accent);
+        }
+
+        @media (max-width: 1120px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                min-width: 0;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .fieldCard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+
+            .main,
+            .sidebar {
+                padding: 16px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>Soulmask GameXishu 編輯器</h1>
+                <p>中文介面、即時搜尋、匯入後編輯，再另存成新的 JSON。適合快速調整大量倍率與開關設定。</p>
+            </div>
+
+            <div class="filebox">
+                <span class="label">匯入 JSON</span>
+                <div class="fileActions">
+                    <input id="fileInput" type="file" accept=".json,application/json" />
+                    <button class="btn good" id="importBtn">匯入並讀取設定</button>
+                    <button class="btn secondary" id="loadDefaultBtn">載入內建預設</button>
+                </div>
+                <div class="fileName" id="filePath">尚未匯入檔案</div>
+                <div class="fileHint">你可以直接載入內建預設，再切換 Casual / Easy / Normal / Hard / Master；也可以匯入自己的 JSON 再另存新檔。</div>
+            </div>
+
+            <div class="panel">
+                <span class="label">難度預設</span>
+                <select id="difficultySelect">
+                    <option value="Casual">Casual</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Hard">Hard</option>
+                    <option value="Master">Master</option>
+                </select>
+                <div class="fileHint">選擇難度後，編輯器會把對應的 Defaults per Difficulty 套用到目前載入的資料。</div>
+                <div class="toolbar" style="margin-top:10px;">
+                    <button class="btn secondary" id="applyDifficultyBtn">套用到所有分組</button>
+                </div>
+            </div>
+
+            <div class="searchbox">
+                <span class="label">搜尋欄位</span>
+                <div class="searchRow">
+                    <input id="searchInput" type="text" placeholder="輸入欄位名、中文描述或關鍵字" />
+                    <label class="switch">
+                        <input id="showChangedOnly" type="checkbox" />
+                        只看已修改欄位
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel">
+                <span class="label">操作</span>
+                <div class="toolbar">
+                    <button class="btn" id="reloadBtn">重新選擇檔案</button>
+                    <button class="btn good" id="exportBtn">另存新檔</button>
+                    <button class="btn warn" id="resetBtn">還原目前分組</button>
+                </div>
+                <div class="notice" id="statusBox">請先匯入你的 GameXishu.json。</div>
+            </div>
+
+            <div class="panel">
+                <span class="label">說明</span>
+                <div class="footerHint">
+                    1. 先匯入你自己的 GameXishu.json。<br />
+                    2. 左側切換 0 / 1 / 2 三組設定。<br />
+                    3. 右側先選 Casual / Easy / Normal / Hard / Master，再套用難度預設。<br />
+                    4. 編輯完成後用「另存新檔」下載新 JSON。<br />
+                    5. 0 / 1 類開關會盡量顯示成切換按鈕。<br />
+                    6. 搜尋會同時比對原始欄位名與中文描述。
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="hero">
+                <div class="heroCard">
+                    <h2>GameXishu 設定總覽</h2>
+                    <p>這個工具會把 Soulmask 的大型 JSON 轉成可操作的表單，讓你不用手動開啟超長文字檔，也能快速調整伺服器設定。也可直接載入內建預設，不必先匯入現有檔案。</p>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="value" id="sectionCount">0</div>
+                        <div class="name">設定分組</div>
+                    </div>
+                    <div class="stat">
+                        <div class="value" id="fieldCount">0</div>
+                        <div class="name">目前欄位數</div>
+                    </div>
+                    <div class="stat">
+                        <div class="value" id="changedCount">0</div>
+                        <div class="name">已修改欄位</div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="sectionCard">
+                <div class="sectionHeader">
+                    <div>
+                        <h3 id="sectionTitle">設定分組 0</h3>
+                        <div class="small" id="sectionHint">正在載入設定...</div>
+                    </div>
+                    <div class="small" id="sectionSummary"></div>
+                </div>
+
+                <div class="tabs" id="tabs"></div>
+                <div class="metaRow" id="metaRow"></div>
+                <div class="fieldList" id="fieldList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const state = {
+            fileName: '',
+            original: null,
+            data: null,
+            activeSection: '0',
+            selectedDifficulty: 'Normal',
+            search: '',
+            showChangedOnly: false,
+            changed: new Set(),
+        };
+
+        const DIFFICULTY_NAMES = ['Casual', 'Easy', 'Normal', 'Hard', 'Master'];
+
+        const DIFFICULTY_PRESETS = {
+            AddRenKeDuRatio: ['1', '10', '2', '1', '1'],
+            GameWorldDayTimePortion: ['0.9', '0.8', '0.7', '0.6', '0.5'],
+            GameWorldTimePower: ['24', '24', '24', '24', '24'],
+            ChongsuRatio: ['1', '0.8', '0.5', '1', '1'],
+            XiuMianDistance: ['10000', '10000', '10000', '10000', '10000'],
+            HuanXingDistance: ['9000', '9000', '9000', '9000', '9000'],
+            GongHuiMaxZhaoMuCount: ['50', '50', '50', '50', '50'],
+            GeRenMaxZhaoMuCount: ['6', '6', '6', '6', '6'],
+            GeRenMaxZhaoMuCount_Two: ['10', '10', '10', '10', '10'],
+            GeRenMaxZhaoMuCount_Three: ['15', '15', '15', '15', '15'],
+            XinQingZengZhang: ['1', '1.5', '1.5', '1', '1'],
+            XinQingJianShao: ['1', '0.8', '0.8', '1', '1'],
+            GongHuiMaxDongWuCount: ['50', '50', '50', '50', '50'],
+            GeRenMaxDongWuCount: ['10', '20', '10', '10', '10'],
+            BaoXiangDiaoLuoDengJi: ['0', '0', '0', '0', '0'],
+            WuLiYouHuaDist: ['6666', '6666', '6666', '6666', '6666'],
+            XiuMianOfflineDays: ['7', '7', '7', '7', '7'],
+            TiaoWuLengQueTime: ['4', '4', '4', '4', '4'],
+            XinXiLuRu: ['4', '4', '4', '4', '4'],
+            MaxFuZhongRatio: ['1', '1', '1', '1', '1'],
+            RoleBagCapacity: ['60', '60', '60', '60', '60'],
+            GeRenBiaoJiMaxCount: ['20', '20', '20', '20', '20'],
+            GongHuiBiaoJiMaxCount: ['20', '20', '20', '20', '20'],
+            GongHuiMaxMember: ['20', '20', '20', '20', '20'],
+            ZhaoHuanDisRatio: ['1', '1', '1', '1', '1'],
+            ConverPropsSpeedRatio: ['1', '5', '5', '1', '1'],
+            MaxConvertCount: ['3', '3', '3', '3', '3'],
+            KurmaFuZhongRatio: ['1', '1', '1', '1', '1'],
+            GongHuiMaxSpecDongWuCount: ['10', '1', '10', '10', '10'],
+            GeRenMaxSpecDongWuCount: ['10', '1', '10', '10', '10'],
+            AnimalFollowerMaxCount: ['3', '1', '3', '3', '3'],
+            MaxConveyorCount: ['1000', '1000', '1000', '1000', '1000'],
+            MaxDongLiKuangChangCount: ['10', '10', '10', '10', '10'],
+            ExpRatio: ['1', '4', '2', '1', '1'],
+            ChengZhangExpRatio: ['1', '5', '2', '1', '1'],
+            MJExpRatio: ['1', '5', '2', '1', '1'],
+            ShuLianDuExpRatio: ['1', '5', '2', '1', '1'],
+            CaiJiExpRatio: ['1', '4', '2', '1', '1'],
+            ZhiZuoExpRatio: ['1', '4', '2', '1', '1'],
+            ShaGuaiExpRatio: ['1', '4', '2', '1', '1'],
+            QiTaExpRatio: ['1', '4', '2', '1', '1'],
+            BeiDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            ZhuDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            ErJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            MaRenBeiDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            MaRenZhuDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            MaRenErJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            DongWuBeiDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            DongWuZhuDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            DongWuErJiShuXingRatio: ['1', '1', '1', '1', '1'],
+            ShaGuaiExpShareRatio: ['0.2', '0.8', '0.4', '0.2', '0.2'],
+            ZuoWuDropRatio: ['1', '3', '2', '1', '1'],
+            ZuoWuShengZhangRatio: ['1', '5', '2', '1', '0.8'],
+            ZhiZuoTimeRatio: ['1', '3', '2', '1', '1'],
+            BaoXiangDropRatio: ['1', '3', '2', '1', '1'],
+            CaiJiDamageRatio: ['1', '2', '1.5', '1', '1'],
+            ZiYuanShengMingRatio: ['1', '1', '1', '1', '1'],
+            DongWuShengZhangRatio: ['1', '5', '2', '1', '0.8'],
+            FanZhiJianGeRatio: ['1', '5', '2', '1', '0.8'],
+            DongWuShengChanJianGeRatio: ['1', '5', '2', '1', '0.8'],
+            DongWuChanChuRatio: ['1', '3', '2', '1', '0.8'],
+            ZuoWuXiaoHuiRatio: ['1', '1', '1', '1', '1'],
+            FuHuaSpeed: ['1', '5', '2', '1', '0.8'],
+            JianZhuFuLanMul: ['1', '0', '0.5', '1', '1'],
+            JianZhuXiuLiMul: ['1', '5', '2', '1', '1'],
+            YeShengHitJianZhuShangHaiRatio: ['4', '1', '2', '4', '6'],
+            WanJiaHitJianZhuShangHaiRatio: ['1', '1', '1', '1', '1'],
+            YingHuoRanShaoSuDuRatio: ['1', '0.5', '0.8', '1.2', '1.5'],
+            PVP_ShangHaiRatio_JinZhan: ['0.4', '0.4', '0.4', '0.4', '0.4'],
+            PVP_ShangHaiRatio_YuanCheng: ['0.4', '0.4', '0.4', '0.4', '0.4'],
+            PVP_ShangHaiRatio_PlayerToPlayer_DiFang: ['1', '1', '1', '1', '1'],
+            PVP_GAPVPDamageRatio: ['1', '1', '1', '1', '1'],
+            PVP_ShangHaiRatio_PlayerToPlayer_YouFang: ['0.06', '0.06', '0.06', '0.06', '0.06'],
+            RollingInvincibleTimeRatio: ['1', '1', '1', '1', '0.85'],
+            NaiJiuXiShu: ['1', '0.3', '0.6', '1', '1.1'],
+            ShiWuXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
+            ShuiXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
+            QiXiXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
+            ShengMingHuiFuRatio: ['1', '5', '2', '1', '0.8'],
+            TiLiHuiFuRatio: ['1', '3', '2', '1', '0.8'],
+            QiXiHuiFuRatio: ['1', '5', '2', '1', '1'],
+            DongWuDamageRatio: ['1', '1', '1', '1', '1'],
+            DongWuJianShangRatio: ['1', '1', '1', '1', '1'],
+            MaRenDamageRatio: ['1', '1', '1', '1', '1'],
+            ManRenJianShangRatio: ['1', '1', '1', '1', '1'],
+            GongJiJianZhuDamageRatio: ['1', '1', '1', '1', '1'],
+            RuQinGuiMoXiShu: ['1', '0.5', '0.8', '1.5', '2'],
+            RuQinQiangDuXiShu: ['1', '0.3', '0.8', '1.2', '1.5'],
+            RuQinGuaiCountMin: ['8', '8', '8', '12', '16'],
+            RuQinGuaiCountMax: ['128', '128', '128', '160', '192'],
+            RuQinPerBoGuaiMin: ['3', '3', '3', '4', '5'],
+            RuQinPerBoGuaiMax: ['16', '16', '16', '20', '24'],
+            RuQinGuaiLevelXiShu: ['1', '1', '1', '1.2', '1.5'],
+            TanChaMinuteLimit: ['20', '20', '20', '20', '20'],
+            JinGongMinuteLimit: ['90', '90', '90', '90', '90'],
+            LengQueMinuteLimit: ['1440', '1440', '1440', '1440', '1440'],
+            RuQinMaxChangCiCount: ['2', '1', '1', '2', '2'],
+            RuQinBeginHour: ['0', '0', '0', '0', '0'],
+            RuQinEndHour: ['24', '24', '24', '24', '24'],
+            RuQinShaoChengXiShu: ['0.6', '0.6', '0.6', '0.7', '0.8'],
+            RuQinTuShaXiShu: ['0.3', '0.3', '0.3', '0.5', '0.7'],
+            PVPTimeAsiaWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeAsiaWorkEndTime: ['24', '24', '24', '24', '24'],
+            PVPTimeAsiaNoWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeAsiaNoWorkEndTime: ['24', '24', '24', '24', '24'],
+            PVPTimeAmericaWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeAmericaWorkEndTime: ['24', '24', '24', '24', '24'],
+            PVPTimeAmericaNoWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeAmericaNoWorkEndTime: ['24', '24', '24', '24', '24'],
+            PVPTimeEuropeWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeEuropeWorkEndTime: ['24', '24', '24', '24', '24'],
+            PVPTimeEuropeNoWorkStartTime: ['0', '0', '0', '0', '0'],
+            PVPTimeEuropeNoWorkEndTime: ['24', '24', '24', '24', '24'],
+            AsiaWarTimeStart: ['10', '1', '1', '1', '1'],
+            AsiaWarTimeEnd: ['14', '1', '1', '1', '1'],
+            EuropeWarTimeStart: ['17', '1', '1', '1', '1'],
+            EuropeWarTimeEnd: ['21', '1', '1', '1', '1'],
+            AmericaWarTimeStart: ['0', '1', '1', '1', '1'],
+            AmericaWarTimeEnd: ['4', '1', '1', '1', '1'],
+            SpecialEventGameDist: ['0', '0', '0', '0', '0'],
+            SpecialEventAsiaStartTime: ['10', '10', '10', '10', '10'],
+            SpecialEventAsiaEndTime: ['16', '16', '16', '16', '16'],
+            SpecialEventEuropeStartTime: ['17', '17', '17', '17', '17'],
+            SpecialEventEuropeEndTime: ['23', '23', '23', '23', '23'],
+            SpecialEventAmericaStartTime: ['23', '23', '23', '23', '23'],
+            SpecialEventAmericaEndTime: ['5', '5', '5', '5', '5'],
+            SpecialEventTriggerInterval: ['3600', '3600', '3600', '3600', '3600'],
+            SpecialEventTriggerPercent: ['50', '50', '50', '50', '50'],
+            SpecialEventTriggetLimitNum: ['2', '2', '2', '2', '2'],
+            SpecialEventServerOpenDay: ['1', '1', '1', '1', '1'],
+            BinSiKaiGuan: ['1', '1', '1', '1', '0'],
+            JianZhuFuLanKaiGuan: ['1', '0', '1', '1', '1'],
+            FuHuoMoveSiWangBaoKaiGuan: ['0', '1', '0', '0', '0'],
+            JianZhuChuanSongMenPlusKaiGuan: ['1', '0', '1', '1', '1'],
+            SuiJiRuQinKaiGuan: ['1', '0', '1', '1', '1'],
+            RuQinKaiGuan: ['1', '1', '1', '1', '1'],
+            ShuaXinNPCKaiGuan: ['0', '0', '0', '0', '0'],
+            PVEOnlyTongGuiShuCanOpenKaiGuan: ['1', '1', '1', '1', '1'],
+            PanpaKaiGuan: ['1', '1', '1', '1', '1'],
+            KaiQiJianZhuHuiXueBuilding: ['1', '1', '1', '1', '1'],
+            HuXIangShangHaiKaiGuan: ['0', '0', '0', '0', '0'],
+            PlayerYouFangShangHaiKaiGuan: ['1', '1', '1', '1', '1'],
+            YouFangShangHaiKaiGuan: ['0', '0', '0', '0', '0'],
+            KaiQiKuaFu: ['0', '0', '0', '0', '0'],
+            MovementYouHua: ['1', '1', '1', '1', '1'],
+            WuLiYouHuaKaiGuan: ['1', '1', '1', '1', '1'],
+            JingShenNoXiaoHao: ['0', '0', '0', '0', '0'],
+            TeShuDaoJuDropXiShuJiaChengKaiGuan: ['0', '0', '0', '0', '0'],
+            BanGlider: ['0', '0', '0', '0', '0'],
+            JianZhuMirageKaiGuan: ['1', '1', '1', '1', '1'],
+            ProtectJianZhuInYingHuoSwitch: ['0', '1', '0', '0', '0'],
+            SpecialEventConfigSwitch: ['0', '0', '0', '0', '0'],
+            IsPlayBossAppearanceSequence: ['1', '1', '1', '1', '1'],
+            IgnoreEnemyJianZhuInSelfYingHuo: ['1', '1', '1', '1', '1'],
+        };
+
+        const RANGE_META = {
+            AddRenKeDuRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['1', '10', '2'] },
+            GameWorldDayTimePortion: { range: '0-1', presets: ['0.7', '0.8', '0.7'] },
+            GameWorldTimePower: { range: '1-48 / 1-288 / 1-48', presets: ['24', '24', '24'] },
+            ChongsuRatio: { range: '0.1-10 / 0.1-100 / 0.1-10', presets: ['1', '10', '2'] },
+            XiuMianDistance: { range: '3000-16000', presets: ['10000', '10000', '10000'] },
+            HuanXingDistance: { range: '2000-15100', presets: ['9000', '9000', '9000'] },
+            GongHuiMaxZhaoMuCount: { range: '1-1000', presets: ['50', '50', '50'] },
+            GeRenMaxZhaoMuCount: { range: '1-10 / 1-100 / 1-10', presets: ['6', '6', '6'] },
+            GeRenMaxZhaoMuCount_Two: { range: '1-20 / 1-200 / 1-20', presets: ['10', '10', '10'] },
+            GeRenMaxZhaoMuCount_Three: { range: '1-1000', presets: ['15', '15', '15'] },
+            XinQingZengZhang: { range: '0-5 / 0-10 / 0-5', presets: ['1', '1.5', '1.5'] },
+            XinQingJianShao: { range: '0-5 / 0-10 / 0-5', presets: ['1', '0.8', '0.8'] },
+            GongHuiMaxDongWuCount: { range: '1-100 / 1-1000 / 1-100', presets: ['50', '50', '50'] },
+            GeRenMaxDongWuCount: { range: '1-100 / 1-1000 / 1-100', presets: ['10', '20', '10'] },
+            BaoXiangDiaoLuoDengJi: { range: '0-4', presets: ['0', '0', '0'] },
+            WuLiYouHuaDist: { range: '5000-9000', presets: ['6666', '6666', '6666'] },
+            XiuMianOfflineDays: { range: '0-30 / 0-360 / 0-30', presets: ['7', '7', '7'] },
+            TiaoWuLengQueTime: { range: '0-24', presets: ['4', '4', '4'] },
+            XinXiLuRu: { range: '1-10', presets: ['4', '4', '4'] },
+            MaxFuZhongRatio: { range: '1-100', presets: ['1', '1', '1'] },
+            RoleBagCapacity: { range: '30-256', presets: ['60', '60', '60'] },
+            GeRenBiaoJiMaxCount: { range: '1-100', presets: ['20', '20', '20'] },
+            GongHuiBiaoJiMaxCount: { range: '1-100', presets: ['20', '20', '20'] },
+            GongHuiMaxMember: { range: '1-50 / 1-100 / 1-50', presets: ['20', '20', '20'] },
+            ZhaoHuanDisRatio: { range: '1-100', presets: ['1', '1', '1'] },
+            ConverPropsSpeedRatio: { range: '1-10 / 1-100 / 1-10', presets: ['1', '5', '5'] },
+            MaxConvertCount: { range: '1-10 / 1-100 / 1-10', presets: ['3', '3', '3'] },
+            KurmaFuZhongRatio: { range: '0-10', presets: ['1', '1', '1'] },
+            GongHuiMaxSpecDongWuCount: { range: '1-100', presets: ['10', '1', '10'] },
+            GeRenMaxSpecDongWuCount: { range: '1-100', presets: ['10', '1', '10'] },
+            AnimalFollowerMaxCount: { range: '0-100', presets: ['3', '1', '3'] },
+            MaxConveyorCount: { range: '1-10000', presets: ['1000', '1000', '1000'] },
+            MaxDongLiKuangChangCount: { range: '1-1000', presets: ['10', '10', '10'] },
+            ExpRatio: { range: '0.1-5 / 0.1-100 / 0.1-5', presets: ['1', '4', '2'] },
+            ChengZhangExpRatio: { range: '0.1-5 / 0.1-100 / 0.1-5', presets: ['1', '5', '2'] },
+            MJExpRatio: { range: '0.1-5 / 0.1-100 / 0.1-5', presets: ['1', '5', '2'] },
+            ShuLianDuExpRatio: { range: '0.1-10 / 0.1-100 / 0.1-10', presets: ['1', '5', '2'] },
+            CaiJiExpRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '4', '2'] },
+            ZhiZuoExpRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '4', '2'] },
+            ShaGuaiExpRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '4', '2'] },
+            QiTaExpRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '4', '2'] },
+            BeiDongYiJiShuXingRatio: { range: '0-3 / 0-10 / 0-3', presets: ['1', '1', '1'] },
+            ZhuDongYiJiShuXingRatio: { range: '0-3 / 0-10 / 0-3', presets: ['1', '1', '1'] },
+            ErJiShuXingRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '1', '1'] },
+            MaRenBeiDongYiJiShuXingRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '1', '1'] },
+            MaRenZhuDongYiJiShuXingRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '1', '1'] },
+            MaRenErJiShuXingRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '1', '1'] },
+            DongWuBeiDongYiJiShuXingRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '1', '1'] },
+            DongWuZhuDongYiJiShuXingRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '1', '1'] },
+            DongWuErJiShuXingRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '1', '1'] },
+            ShaGuaiExpShareRatio: { range: '0-1', presets: ['0.2', '0.8', '0.4'] },
+            ZuoWuDropRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '3', '2'] },
+            ZuoWuShengZhangRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['1', '5', '2'] },
+            ZhiZuoTimeRatio: { range: '0.1-5 / 0.1-1000 / 0.1-5', presets: ['1', '3', '2'] },
+            BaoXiangDropRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '3', '2'] },
+            CaiJiDamageRatio: { range: '0-5', presets: ['1', '2', '1.5'] },
+            ZiYuanShengMingRatio: { range: '0.1-3 / 0.1-10 / 0.1-3', presets: ['1', '1', '1'] },
+            DongWuShengZhangRatio: { range: '0-100 / 0-1000 / 0-100', presets: ['1', '5', '2'] },
+            FanZhiJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '5', '2'] },
+            DongWuShengChanJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '5', '2'] },
+            DongWuChanChuRatio: { range: '0-3 / 0-10 / 0-3', presets: ['1', '3', '2'] },
+            ZuoWuXiaoHuiRatio: { range: '0-5 / 0-10 / 0-5', presets: ['1', '1', '1'] },
+            FuHuaSpeed: { range: '0-10 / 0-1000 / 0-10', presets: ['1', '5', '2'] },
+            JianZhuFuLanMul: { range: '0-5', presets: ['1', '0', '0.5'] },
+            JianZhuXiuLiMul: { range: '0-10', presets: ['1', '5', '2'] },
+            YeShengHitJianZhuShangHaiRatio: { range: '0-10', presets: ['4', '1', '2'] },
+            WanJiaHitJianZhuShangHaiRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            YingHuoRanShaoSuDuRatio: { range: '0-2 / 0-5 / 0-2', presets: ['1', '0.5', '0.8'] },
+            PVP_ShangHaiRatio_JinZhan: { range: '0-1', presets: ['0.4', '0.4', '0.4'] },
+            PVP_ShangHaiRatio_YuanCheng: { range: '0-1', presets: ['0.4', '0.4', '0.4'] },
+            PVP_ShangHaiRatio_PlayerToPlayer_DiFang: { range: '0-5', presets: ['1', '1', '1'] },
+            PVP_GAPVPDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            PVP_ShangHaiRatio_PlayerToPlayer_YouFang: { range: '0-1', presets: ['0.06', '0.06', '0.06'] },
+            RollingInvincibleTimeRatio: { range: '0.5-1', presets: ['1', '1', '1'] },
+            NaiJiuXiShu: { range: '0-2', presets: ['1', '0.3', '0.6'] },
+            ShiWuXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
+            ShuiXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
+            QiXiXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
+            ShengMingHuiFuRatio: { range: '0-5 / 0-10 / 0-5', presets: ['1', '5', '2'] },
+            TiLiHuiFuRatio: { range: '0-5', presets: ['1', '3', '2'] },
+            QiXiHuiFuRatio: { range: '0-5', presets: ['1', '5', '2'] },
+            DongWuDamageRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
+            DongWuJianShangRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
+            MaRenDamageRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
+            ManRenJianShangRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
+            GongJiJianZhuDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            RuQinGuiMoXiShu: { range: '0-10', presets: ['1', '0.5', '0.8'] },
+            RuQinQiangDuXiShu: { range: '0-10', presets: ['1', '0.3', '0.8'] },
+            RuQinGuaiCountMin: { range: '1-50', presets: ['8', '8', '8'] },
+            RuQinGuaiCountMax: { range: '2-256', presets: ['128', '128', '128'] },
+            RuQinPerBoGuaiMin: { range: '1-50', presets: ['3', '3', '3'] },
+            RuQinPerBoGuaiMax: { range: '1-256', presets: ['16', '16', '16'] },
+            RuQinGuaiLevelXiShu: { range: '0-10', presets: ['1', '1', '1'] },
+            TanChaMinuteLimit: { range: '1-100', presets: ['20', '20', '20'] },
+            JinGongMinuteLimit: { range: '30-120', presets: ['90', '90', '90'] },
+            LengQueMinuteLimit: { range: '1-14400', presets: ['1440', '1440', '1440'] },
+            RuQinMaxChangCiCount: { range: '1-5', presets: ['2', '1', '1'] },
+            RuQinBeginHour: { range: '0-23', presets: ['0', '0', '0'] },
+            RuQinEndHour: { range: '1-24', presets: ['24', '24', '24'] },
+            RuQinShaoChengXiShu: { range: '0-1', presets: ['0.6', '0.6', '0.6'] },
+            RuQinTuShaXiShu: { range: '0-1', presets: ['0.3', '0.3', '0.3'] },
+            PVPTimeAsiaWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeAsiaWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            PVPTimeAsiaNoWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeAsiaNoWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            PVPTimeAmericaWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeAmericaWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            PVPTimeAmericaNoWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeAmericaNoWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            PVPTimeEuropeWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeEuropeWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            PVPTimeEuropeNoWorkStartTime: { range: '0-24', presets: ['0', '0', '0'] },
+            PVPTimeEuropeNoWorkEndTime: { range: '0-24', presets: ['24', '24', '24'] },
+            AsiaWarTimeStart: { range: '0-24', presets: ['10', '1', '1'] },
+            AsiaWarTimeEnd: { range: '0-24', presets: ['14', '1', '1'] },
+            EuropeWarTimeStart: { range: '0-24', presets: ['17', '1', '1'] },
+            EuropeWarTimeEnd: { range: '0-24', presets: ['21', '1', '1'] },
+            AmericaWarTimeStart: { range: '0-24', presets: ['0', '1', '1'] },
+            AmericaWarTimeEnd: { range: '0-24', presets: ['4', '1', '1'] },
+            SpecialEventGameDist: { range: '0-2', presets: ['0', '0', '0'] },
+            SpecialEventAsiaStartTime: { range: '0-24', presets: ['10', '10', '10'] },
+            SpecialEventAsiaEndTime: { range: '0-24', presets: ['16', '16', '16'] },
+            SpecialEventEuropeStartTime: { range: '0-24', presets: ['17', '17', '17'] },
+            SpecialEventEuropeEndTime: { range: '0-24', presets: ['23', '23', '23'] },
+            SpecialEventAmericaStartTime: { range: '0-24', presets: ['23', '23', '23'] },
+            SpecialEventAmericaEndTime: { range: '0-24', presets: ['5', '5', '5'] },
+            SpecialEventTriggerInterval: { range: '1-86399', presets: ['3600', '3600', '3600'] },
+            SpecialEventTriggerPercent: { range: '0-100', presets: ['50', '50', '50'] },
+            SpecialEventTriggetLimitNum: { range: '0-10', presets: ['2', '2', '2'] },
+            SpecialEventServerOpenDay: { range: '0-10', presets: ['1', '1', '1'] },
+            BinSiKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            JianZhuFuLanKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
+            FuHuoMoveSiWangBaoKaiGuan: { range: '0/1', presets: ['0', '1', '0'] },
+            JianZhuChuanSongMenPlusKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
+            SuiJiRuQinKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
+            RuQinKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            ShuaXinNPCKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
+            PVEOnlyTongGuiShuCanOpenKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            PanpaKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            KaiQiJianZhuHuiXueBuilding: { range: '0/1', presets: ['1', '1', '1'] },
+            HuXIangShangHaiKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
+            PlayerYouFangShangHaiKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            YouFangShangHaiKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
+            KaiQiKuaFu: { range: '0/1', presets: ['0', '0', '0'] },
+            MovementYouHua: { range: '0/1', presets: ['1', '1', '1'] },
+            WuLiYouHuaKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            JingShenNoXiaoHao: { range: '0/1', presets: ['0', '0', '0'] },
+            TeShuDaoJuDropXiShuJiaChengKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
+            BanGlider: { range: '0/1', presets: ['0', '0', '0'] },
+            JianZhuMirageKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            ProtectJianZhuInYingHuoSwitch: { range: '0/1', presets: ['0', '1', '0'] },
+            SpecialEventConfigSwitch: { range: '0/1', presets: ['0', '0', '0'] },
+            IsPlayBossAppearanceSequence: { range: '0/1', presets: ['1', '1', '1'] },
+            IgnoreEnemyJianZhuInSelfYingHuo: { range: '0/1', presets: ['1', '1', '1'] },
+            SOULMASK_LEVEL_NAME: { range: '內建關卡名稱', presets: ['Level01_Main', 'Level01_Main', 'Level01_Main'] },
+        };
+
+        const EXACT_LABELS = {
+            ExpRatio: '全體經驗倍率',
+            CaiJiDiaoLuoRatio: '採集掉落倍率',
+            FaMuDiaoLuoRatio: '伐木掉落倍率',
+            CaiKuangDiaoLuoRatio: '採礦掉落倍率',
+            DongWuShiTiDiaoLuoRatio: '動物屍體掉落倍率',
+            DongWuShiTiZhongYaoDiaoLuoRatio: '動物重要材料掉落倍率',
+            CaiJiShengChanJianZhuDiaoLuoRatio: '採集/生產/建築掉落倍率',
+            PuTongRenDiaoLuoRatio: '普通人形敵人掉落倍率',
+            JingYingRenDiaoLuoRatio: '精英人形敵人掉落倍率',
+            BossRenDiaoLuoRatio: 'Boss 人形敵人掉落倍率',
+            ZuoWuDropRatio: '作物掉落倍率',
+            AddRenKeDuRatio: 'NPC 接受度/好感倍率',
+            ZuoWuShengZhangRatio: '作物生長速度',
+            BinSiKaiGuan: '瀕死開關',
+            JianZhuFuLanMul: '建築腐爛倍率',
+            JianZhuXiuLiMul: '建築修理倍率',
+            JianZhuFuLanKaiGuan: '建築腐爛開關',
+            ZhiZuoTimeRatio: '製作時間倍率',
+            DamageYeShengRatio: '對野生生物傷害倍率',
+            BeDamageByYeShengRatio: '受到野生生物傷害倍率',
+            GameWorldDayTimePortion: '白天比例',
+            GameWorldTimePower: '世界時間倍率',
+            BaoXiangDropRatio: '寶箱掉落倍率',
+            ZhiBeiChongShengRatio: '植被再生倍率',
+            ChengZhangExpRatio: '成長經驗倍率',
+            MJExpRatio: '特殊經驗倍率',
+            ShuLianDuExpRatio: '熟練度經驗倍率',
+            CaiJiExpRatio: '採集經驗倍率',
+            ZhiZuoExpRatio: '製作經驗倍率',
+            ShaGuaiExpRatio: '殺怪經驗倍率',
+            QiTaExpRatio: '其他經驗倍率',
+            BeiDongYiJiShuXingRatio: '被動一級屬性倍率',
+            ZhuDongYiJiShuXingRatio: '主動一級屬性倍率',
+            ErJiShuXingRatio: '二級屬性倍率',
+            ShiWuXiaoHaoRatio: '食物消耗倍率',
+            ShuiXiaoHaoRatio: '水分消耗倍率',
+            QiXiXiaoHaoRatio: '氣息消耗倍率',
+            ShengMingHuiFuRatio: '生命恢復倍率',
+            TiLiHuiFuRatio: '體力恢復倍率',
+            QiXiHuiFuRatio: '氣息恢復倍率',
+            DongWuDamageRatio: '動物傷害倍率',
+            DongWuJianShangRatio: '動物受傷倍率',
+            MaRenDamageRatio: '蠻人傷害倍率',
+            ManRenJianShangRatio: '蠻人受傷倍率',
+            CaiJiDamageRatio: '採集傷害/效率倍率',
+            ZiYuanShengMingRatio: '資源生命值倍率',
+            RanLiaoXiaoHaoRatio: '燃料消耗倍率',
+            DongWuShengZhangRatio: '動物成長速度',
+            FanZhiJianGeRatio: '繁殖間隔倍率',
+            DongWuShengChanJianGeRatio: '動物生產間隔倍率',
+            DongWuChanChuRatio: '動物產出倍率',
+            DongWuXiaoHaoShiWuRatio: '動物食物消耗倍率',
+            DongWuXiaoHaoShuiRatio: '動物水分消耗倍率',
+            ZuoWuFeiLiaoXiaoHaoRatio: '作物肥料消耗倍率',
+            ZuoWuShuiXiaoHaoRatio: '作物水分消耗倍率',
+            ZuoWuXiaoHuiRatio: '作物損耗倍率',
+            GongJiJianZhuDamageRatio: '攻擊建築傷害倍率',
+            DongWuPinZhiRatio: '動物品質倍率',
+            ManRenPinZhiRatio: '蠻人品質倍率',
+            WanJiaZiYuanJinShuaBanJing: '玩家資源刷新半徑',
+            JianZhuZiYuanJinShuaBanJing: '建築資源刷新半徑',
+            WuPinFuHuaiRatio: '物品損壞倍率',
+            WuPinXiaoHuiTime: '物品消耗時間',
+            XiuLiXuYaoCaiLiaoRatio: '修理材料需求倍率',
+            XiuLiJiangNaiJiuShangXianRatio: '修理後耐久上限倍率',
+            HuiFuChuShiBodyData: '初始身體數據回復',
+            WanMeiChongSu: '完美重塑開關',
+            FuHuoMoveSiWangBaoKaiGuan: '復活移動死亡包開關',
+            JianZhuChuanSongMenPlusKaiGuan: '建築傳送門增強開關',
+            SuiJiRuQinKaiGuan: '隨機入侵開關',
+            RuQinKaiGuan: '入侵開關',
+            ShuaXinNPCKaiGuan: 'NPC 刷新開關',
+            RuQinGuiMoXiShu: '入侵規模係數',
+            RuQinQiangDuXiShu: '入侵強度係數',
+            RuQinGuaiCountMin: '入侵怪物最少數量',
+            RuQinGuaiCountMax: '入侵怪物最多數量',
+            RuQinPerBoGuaiMin: '每波怪物最少數量',
+            RuQinPerBoGuaiMax: '每波怪物最多數量',
+            RuQinGuaiLevelXiShu: '入侵怪物等級倍率',
+            TanChaMinuteLimit: '探查時間上限',
+            JinGongMinuteLimit: '進攻時間上限',
+            LengQueMinuteLimit: '冷卻時間上限',
+            ChongsuRatio: '重塑倍率',
+            RuQinMaxChangCiCount: '最大入侵場次',
+            RuQinBeginHour: '入侵開始時間',
+            RuQinEndHour: '入侵結束時間',
+            RuQinShaoChengXiShu: '入侵燒城係數',
+            RuQinTuShaXiShu: '入侵屠殺係數',
+            XiuMianDistance: '休眠距離',
+            HuanXingDistance: '喚醒距離',
+            GongHuiMaxZhaoMuCount: '公會最大招募數',
+            GeRenMaxZhaoMuCount: '個人最大招募數',
+            GeRenMaxZhaoMuCount_Two: '個人最大招募數 2',
+            GeRenMaxZhaoMuCount_Three: '個人最大招募數 3',
+            XinQingZengZhang: '心情增加倍率',
+            XinQingJianShao: '心情減少倍率',
+            XiShuWeiLing: '係數歸零',
+            YeShengHitJianZhuShangHaiRatio: '野生生物打建築傷害倍率',
+            PVP_ShangHaiRatio_WithoutP2P_YouFang: '無 P2P 友方傷害倍率',
+            WanJiaHitJianZhuShangHaiRatio: '玩家打建築傷害倍率',
+            ShaGuaiExpShareRatio: '擊殺經驗共享倍率',
+            YunXuOtherDaKaiGongZuoTai: '允許其他人打開工作台',
+            YunXuOtherDaKaiXiangZi: '允許其他人打開箱子',
+            PVEOnlyTongGuiShuCanOpenKaiGuan: 'PVE 同歸屬樹可開啟',
+            PVP_ShangHaiRatio_JinZhan: 'PVP 近戰傷害倍率',
+            PVP_ShangHaiRatio_YuanCheng: 'PVP 遠程傷害倍率',
+            GongHuiMaxDongWuCount: '公會最大動物數量',
+            GeRenMaxDongWuCount: '個人最大動物數量',
+            PanpaKaiGuan: '攀爬開關',
+            WanJiaBeiXiaoRenRatio: '玩家被小型人形單位傷害倍率',
+            WanJiaBeiXiaoTiRatio: '玩家被小型體型單位傷害倍率',
+            KaiQiJianZhuHuiXueBuilding: '建築回血開關',
+            PVP_ShangHaiRatio_PlayerToPlayer_DiFang: '玩家對敵方玩家傷害倍率',
+            PVP_GAPVPDamageRatio: '公會 / 群組 PVP 傷害倍率',
+            HuXIangShangHaiKaiGuan: '互相傷害開關',
+            PlayerYouFangShangHaiKaiGuan: '玩家友方傷害開關',
+            YouFangShangHaiKaiGuan: '友方傷害開關',
+            PVP_ShangHaiRatio_PlayerToPlayer_YouFang: '玩家對友方玩家傷害倍率',
+            BaoXiangDiaoLuoDengJi: '寶箱掉落等級',
+            KaiQiKuaFu: '跨服開關',
+            FuHuaSpeed: '孵化速度',
+            YingHuoRanShaoSuDuRatio: '營火燃燒速度倍率',
+            HuDongExcludeBetweenCameraCharacter: '相機與角色互動排除',
+            WuLiYouHuaDist: '物理優化距離',
+            MovementYouHua: '移動優化開關',
+            XiuMianOfflineDays: '離線休眠天數',
+            WuLiYouHuaKaiGuan: '物理優化開關',
+            TiaoWuLengQueTime: '跳舞冷卻時間',
+            MaxLevel: '最高等級',
+            XinXiLuRu: '訊息輸入等級',
+            TeShuDaoJuDropXiShuJiaChengKaiGuan: '特殊道具掉落加成開關',
+            MaxGenRenYingHuoNumber: '單人營火上限',
+            MaxGongHuiYingHuoNumber: '公會營火上限',
+            MaxChuanSongMenNumber: '傳送門上限',
+            JingShenNoXiaoHao: '精神值不消耗開關',
+            MaxFuZhongRatio: '最大負重倍率',
+            RoleBagCapacity: '背包容量',
+            JianZhuGaoDuLimit: '建築高度限制',
+            AIDengJi: 'AI 等級',
+            GeRenBiaoJiMaxCount: '個人標記上限',
+            GongHuiBiaoJiMaxCount: '公會標記上限',
+            ManRenChuZhanCount: '出戰數量',
+            MakeUseAroundRongQiKaiGuan: '使用附近容器開關',
+            JianZhuBeDamageLimit: '建築受損限制',
+            JianZhuAroundNumLimit: '建築周邊數量限制',
+            GongHuiMaxMember: '公會成員上限',
+            DynamicBossStats: '動態 Boss 屬性開關',
+            ZhaoHuanDisRatio: '召喚距離倍率',
+            SuoDingKaiGuan: '鎖定開關',
+            ZuRenFuZhi: '族人複製/繼承相關',
+            TransDoorInterworkKaiGuan: '傳送門互通開關',
+            ConverPropsSpeedRatio: '轉換速度倍率',
+            MaxXiuMianCangCount: '休眠倉上限',
+            RollingInvincibleTimeRatio: '翻滾無敵時間倍率',
+            MaxConvertCount: '最大轉換數量',
+            AsiaWarTimeStart: '亞洲戰爭開始時間',
+            AsiaWarTimeEnd: '亞洲戰爭結束時間',
+            EuropeWarTimeStart: '歐洲戰爭開始時間',
+            EuropeWarTimeEnd: '歐洲戰爭結束時間',
+            AmericaWarTimeStart: '美洲戰爭開始時間',
+            AmericaWarTimeEnd: '美洲戰爭結束時間',
+            WarKaiGuan: '戰爭開關',
+            TribalExplorationKaiGuan: '部落探索開關',
+            RuinsExplorationKaiGuan: '遺跡探索開關',
+            TribalTransportSwitch: '部落運輸開關',
+            SpecialBossSwitch: '特殊 Boss 開關',
+            RelicChestEventSwitch: '遺物寶箱事件開關',
+            BossDeathEventSwitch: 'Boss 死亡事件開關',
+            KurmaFuZhongRatio: 'Kurma 負重倍率',
+            GongHuiMaxSpecDongWuCount: '公會特殊動物上限',
+            GeRenMaxSpecDongWuCount: '個人特殊動物上限',
+            ProtectJianZhuInYingHuoSwitch: '營火內建築保護開關',
+            SpecialEventConfigSwitch: '特殊事件設定開關',
+            SpecialEventGameDist: '特殊事件遊戲距離',
+            SpecialEventAsiaStartTime: '亞洲特殊事件開始時間',
+            SpecialEventAsiaEndTime: '亞洲特殊事件結束時間',
+            SpecialEventEuropeStartTime: '歐洲特殊事件開始時間',
+            SpecialEventEuropeEndTime: '歐洲特殊事件結束時間',
+            SpecialEventAmericaStartTime: '美洲特殊事件開始時間',
+            SpecialEventAmericaEndTime: '美洲特殊事件結束時間',
+            SpecialEventTriggerInterval: '特殊事件觸發間隔',
+            SpecialEventTriggerPercent: '特殊事件觸發機率',
+            SpecialEventTriggetLimitNum: '特殊事件觸發上限',
+            SpecialEventServerOpenDay: '開服第幾天啟用特殊事件',
+            IsPlayBossAppearanceSequence: 'Boss 登場動畫開關',
+            AnimalFollowerMaxCount: '動物跟隨上限',
+            BanGlider: '禁用滑翔翼',
+            JianZhuMirageKaiGuan: '建築幻影開關',
+            MaxConveyorCount: '輸送帶上限',
+            MaxDongLiKuangChangCount: '動力礦場上限',
+            IgnoreEnemyJianZhuInSelfYingHuo: '忽略自己營火範圍內的敵方建築',
+            SOULMASK_LEVEL_NAME: '載入地圖名稱',
+        };
+
+        const TOKEN_MAP = [
+            ['PVPTime', 'PVP 時段'],
+            ['PVP_ShangHaiRatio', 'PVP 傷害倍率'],
+            ['GameWorld', '世界'],
+            ['LevelName', '地圖名稱'],
+            ['Level', '等級'],
+            ['Server', '伺服器'],
+            ['Query', '查詢'],
+            ['Steam', 'Steam'],
+            ['Exp', '經驗'],
+            ['Ratio', '倍率'],
+            ['DiaoLuo', '掉落'],
+            ['CaiJi', '採集'],
+            ['FaMu', '伐木'],
+            ['CaiKuang', '採礦'],
+            ['DongWu', '動物'],
+            ['ShiTi', '屍體'],
+            ['ZhongYao', '重要'],
+            ['ShengChan', '生產'],
+            ['PuTong', '普通'],
+            ['JingYing', '精英'],
+            ['Boss', 'Boss'],
+            ['ZuoWu', '作物'],
+            ['AddRenKeDu', '接受度'],
+            ['ZhiZuo', '製作'],
+            ['Damage', '傷害'],
+            ['BeDamageBy', '受到'],
+            ['GameWorldDayTimePortion', '白天比例'],
+            ['GameWorldTimePower', '世界時間倍率'],
+            ['BaoXiang', '寶箱'],
+            ['ZhiBei', '植被'],
+            ['ChengZhang', '成長'],
+            ['MJ', '特殊'],
+            ['ShuLianDu', '熟練度'],
+            ['NaiJiu', '耐久'],
+            ['ReDu', '熱度'],
+            ['ShengMing', '生命'],
+            ['TiLi', '體力'],
+            ['QiXi', '氣息'],
+            ['RanLiao', '燃料'],
+            ['FanZhi', '繁殖'],
+            ['JianGe', '間隔'],
+            ['ChanChu', '產出'],
+            ['FeiLiao', '肥料'],
+            ['XiaoHao', '消耗'],
+            ['XiuLi', '修理'],
+            ['JiangNaiJiu', '耐久上限'],
+            ['HuiFu', '回復'],
+            ['ChuShi', '初始'],
+            ['FuHuo', '復活'],
+            ['SiWangBao', '死亡包'],
+            ['ChuanSongMen', '傳送門'],
+            ['KaiGuan', '開關'],
+            ['Switch', '開關'],
+            ['SuiJi', '隨機'],
+            ['RuQin', '入侵'],
+            ['ShuaXin', '刷新'],
+            ['NPC', 'NPC'],
+            ['GuiMo', '規模'],
+            ['QiangDu', '強度'],
+            ['GuaiCount', '怪物數量'],
+            ['GuaiLevel', '怪物等級'],
+            ['Minute', '分鐘'],
+            ['ChangCi', '場次'],
+            ['ShaoCheng', '燒城'],
+            ['TuSha', '屠殺'],
+            ['XiuMian', '休眠'],
+            ['HuanXing', '喚醒'],
+            ['GongHui', '公會'],
+            ['GeRen', '個人'],
+            ['XinQing', '心情'],
+            ['XiShu', '係數'],
+            ['YeSheng', '野生'],
+            ['YouFang', '友方'],
+            ['DiFang', '敵方'],
+            ['JinZhan', '近戰'],
+            ['YuanCheng', '遠程'],
+            ['BanJing', '半徑'],
+            ['Distance', '距離'],
+            ['Count', '數量'],
+            ['Max', '最大'],
+            ['Min', '最小'],
+            ['Time', '時間'],
+            ['Hour', '小時'],
+            ['Day', '天'],
+            ['Power', '倍率'],
+            ['Port', '埠'],
+            ['PVP', 'PVP'],
+            ['PVE', 'PVE'],
+            ['YingHuo', '營火'],
+            ['JianZhu', '建築'],
+            ['WuPin', '物品'],
+            ['WanJia', '玩家'],
+            ['ZiYuan', '資源'],
+            ['ManRen', '蠻人'],
+            ['MaRen', '人形敵人'],
+            ['Panpa', '攀爬'],
+            ['HuDong', '互動'],
+            ['Ling', '零'],
+            ['No', '不'],
+            ['Yes', '是'],
+            ['Folder', '資料夾'],
+            ['Config', '設定'],
+        ];
+
+        const BOOLEAN_HINTS = [
+            'KaiGuan', 'Switch', 'Enable', 'Disable', 'Ban', 'NoXiaoHao', 'KaiQi', 'Open', 'Close',
+            'PVEOnly', 'Panpa', 'SuoDing', 'HuXi', 'HuDong', 'Protect', 'Ignore', 'MovementYouHua',
+            'WuLiYouHua', 'BanGlider', 'KaiQiKuaFu', 'WarKaiGuan', 'TribalExplorationKaiGuan',
+            'RuinsExplorationKaiGuan', 'SpecialBossSwitch', 'RelicChestEventSwitch', 'BossDeathEventSwitch',
+            'SpecialEventConfigSwitch', 'IsPlayBossAppearanceSequence', 'JianZhuFuLanKaiGuan',
+            'JianZhuChuanSongMenPlusKaiGuan', 'ShuaXinNPCKaiGuan', 'RuQinKaiGuan', 'SuiJiRuQinKaiGuan'
+        ];
+
+        function guessType(key, value) {
+            if (typeof value === 'boolean') return '布林';
+            if (typeof value === 'number') {
+                return BOOLEAN_HINTS.some((hint) => key.includes(hint)) && (value === 0 || value === 1) ? '開關' : (Number.isInteger(value) ? '整數' : '小數');
+            }
+            return '文字';
+        }
+
+        function describeKey(key) {
+            if (EXACT_LABELS[key]) return EXACT_LABELS[key];
+            let text = key;
+            for (const [from, to] of TOKEN_MAP) {
+                text = text.split(from).join(to);
+            }
+            text = text.replaceAll('_', ' ').replace(/\s+/g, ' ').trim();
+            return text || '欄位';
+        }
+
+        function isBoolLike(key, value) {
+            return typeof value === 'boolean' || (typeof value === 'number' && (value === 0 || value === 1) && BOOLEAN_HINTS.some((hint) => key.includes(hint)));
+        }
+
+        function clone(value) {
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        function setStatus(message, kind = '') {
+            const box = document.getElementById('statusBox');
+            box.className = `notice ${kind}`.trim();
+            box.textContent = message;
+        }
+
+        function updateStats() {
+            const sections = Object.keys(state.data || {});
+            const current = state.data?.[state.activeSection] || {};
+            document.getElementById('sectionCount').textContent = sections.length;
+            document.getElementById('fieldCount').textContent = Object.keys(current).length;
+            document.getElementById('changedCount').textContent = state.changed.size;
+        }
+
+        function buildTabs() {
+            const tabs = document.getElementById('tabs');
+            tabs.innerHTML = '';
+            const keys = Object.keys(state.data || {}).sort((a, b) => Number(a) - Number(b));
+            keys.forEach((key) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `tab ${key === state.activeSection ? 'active' : ''}`;
+                button.textContent = `分組 ${key}`;
+                button.onclick = () => {
+                    state.activeSection = key;
+                    renderAll();
+                };
+                tabs.appendChild(button);
+            });
+        }
+
+        function currentSectionData() {
+            return state.data?.[state.activeSection] || {};
+        }
+
+        function matchesSearch(key, value, desc) {
+            if (!state.search) return true;
+            const needle = state.search.toLowerCase();
+            return [key, desc, String(value)].some((part) => String(part).toLowerCase().includes(needle));
+        }
+
+        function buildMetaRow() {
+            const metaRow = document.getElementById('metaRow');
+            metaRow.innerHTML = '';
+            const data = currentSectionData();
+            const items = Object.entries(data);
+            const visible = items.filter(([key, value]) => matchesSearch(key, value, describeKey(key)));
+            const chipTexts = [
+                `難度：${state.selectedDifficulty}`,
+                `原始欄位：${items.length}`,
+                `顯示中：${visible.length}`,
+                `已修改：${state.changed.size}`,
+            ];
+            chipTexts.forEach((text) => {
+                const chip = document.createElement('span');
+                chip.className = 'chip';
+                chip.textContent = text;
+                metaRow.appendChild(chip);
+            });
+        }
+
+        function getDifficultyPreset(key) {
+            return DIFFICULTY_PRESETS[key] || null;
+        }
+
+        function coercePresetValue(currentValue, presetValue) {
+            if (typeof currentValue === 'boolean') {
+                return presetValue === true || presetValue === 'true' || presetValue === 'on' || presetValue === 1 || presetValue === '1';
+            }
+
+            if (typeof currentValue === 'number') {
+                const numericValue = Number(presetValue);
+                return Number.isNaN(numericValue) ? currentValue : numericValue;
+            }
+
+            if (presetValue === null || presetValue === undefined) {
+                return currentValue;
+            }
+
+            return String(presetValue);
+        }
+
+        function rebuildChangedState() {
+            state.changed.clear();
+            if (!state.data || !state.original) return;
+
+            for (const [sectionKey, sectionValue] of Object.entries(state.data)) {
+                const originalSection = state.original[sectionKey] || {};
+                for (const [key, value] of Object.entries(sectionValue)) {
+                    if (JSON.stringify(originalSection[key]) !== JSON.stringify(value)) {
+                        state.changed.add(`${sectionKey}.${key}`);
+                    }
+                }
+            }
+        }
+
+        function applyDifficultyPreset() {
+            if (!state.data) {
+                setStatus('請先載入內建預設或匯入 JSON。', 'warn');
+                return;
+            }
+
+            const difficultyIndex = DIFFICULTY_NAMES.indexOf(state.selectedDifficulty);
+            if (difficultyIndex < 0) {
+                setStatus('找不到這個難度預設。', 'error');
+                return;
+            }
+
+            let updatedFields = 0;
+            for (const section of Object.values(state.data)) {
+                for (const [key, value] of Object.entries(section)) {
+                    const preset = getDifficultyPreset(key);
+                    if (!preset) continue;
+                    const nextValue = preset[difficultyIndex];
+                    if (nextValue === undefined) continue;
+                    section[key] = coercePresetValue(value, nextValue);
+                    updatedFields += 1;
+                }
+            }
+
+            rebuildChangedState();
+            renderAll();
+            setStatus(`已套用 ${state.selectedDifficulty} 難度預設，更新了 ${updatedFields} 個欄位。`, 'good');
+        }
+
+        function renderField(key, value) {
+            const original = state.original?.[state.activeSection]?.[key];
+            const changed = JSON.stringify(original) !== JSON.stringify(value);
+            const desc = describeKey(key);
+            const meta = RANGE_META[key];
+            const type = guessType(key, value);
+            const card = document.createElement('div');
+            card.className = `fieldCard ${changed ? 'changed' : ''}`;
+            card.dataset.key = key;
+            card.dataset.search = `${key} ${desc} ${String(value)}`.toLowerCase();
+
+            const left = document.createElement('div');
+            const title = document.createElement('div');
+            title.className = 'fieldTitle';
+            title.innerHTML = `<span class="key">${key}</span><span class="kind">${type}</span>${changed ? '<span class="kind" style="background:rgba(251,191,36,0.16);color:#fde68a;border-color:rgba(251,191,36,0.22)">已修改</span>' : ''}`;
+            const descBox = document.createElement('div');
+            descBox.className = 'fieldDesc';
+            descBox.textContent = desc;
+            left.appendChild(title);
+            left.appendChild(descBox);
+
+            if (meta) {
+                const metaRow = document.createElement('div');
+                metaRow.className = 'fieldMeta';
+
+                const rangeChip = document.createElement('span');
+                rangeChip.className = 'metaChip';
+                rangeChip.textContent = `範圍：${meta.range}`;
+                metaRow.appendChild(rangeChip);
+
+                const difficultyPreset = getDifficultyPreset(key);
+                if (difficultyPreset) {
+                    const presetChip = document.createElement('span');
+                    presetChip.className = 'metaChip';
+                    presetChip.textContent = DIFFICULTY_NAMES.map((difficulty, index) => `${difficulty}:${difficultyPreset[index]}`).join('  ');
+                    metaRow.appendChild(presetChip);
+                }
+
+                left.appendChild(metaRow);
+            }
+
+            const right = document.createElement('div');
+            right.className = 'fieldValueBox';
+
+            const row = document.createElement('div');
+            row.className = 'valueRow';
+
+            let editor;
+            if (isBoolLike(key, value)) {
+                editor = document.createElement('select');
+                editor.innerHTML = '<option value="1">開啟</option><option value="0">關閉</option>';
+                editor.value = String(Number(value));
+            } else if (typeof value === 'number') {
+                editor = document.createElement('input');
+                editor.type = 'number';
+                editor.step = Number.isInteger(value) ? '1' : 'any';
+                editor.value = String(value);
+            } else {
+                const longText = String(value).length > 48;
+                editor = longText ? document.createElement('textarea') : document.createElement('input');
+                editor.value = String(value);
+                if (longText) editor.rows = 3;
+                if (!longText) editor.type = 'text';
+            }
+
+            editor.oninput = () => {
+                let nextValue = editor.value;
+                const current = state.data[state.activeSection][key];
+                if (isBoolLike(key, current)) {
+                    nextValue = Number(editor.value);
+                } else if (typeof current === 'number') {
+                    nextValue = editor.value === '' ? 0 : Number(editor.value);
+                    if (Number.isNaN(nextValue)) return;
+                }
+                state.data[state.activeSection][key] = nextValue;
+                const originalValue = state.original?.[state.activeSection]?.[key];
+                const isChanged = JSON.stringify(originalValue) !== JSON.stringify(nextValue);
+                if (isChanged) state.changed.add(`${state.activeSection}.${key}`);
+                else state.changed.delete(`${state.activeSection}.${key}`);
+                renderAll(false);
+            };
+
+            row.appendChild(editor);
+
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'miniBtn';
+            copyBtn.textContent = '複製欄位名';
+            copyBtn.onclick = async () => {
+                await navigator.clipboard.writeText(key);
+                setStatus(`已複製欄位名：${key}`, 'good');
+            };
+            row.appendChild(copyBtn);
+
+            const resetBtn = document.createElement('button');
+            resetBtn.type = 'button';
+            resetBtn.className = 'miniBtn';
+            resetBtn.textContent = '還原這欄';
+            resetBtn.onclick = () => {
+                state.data[state.activeSection][key] = clone(state.original[state.activeSection][key]);
+                state.changed.delete(`${state.activeSection}.${key}`);
+                renderAll();
+            };
+            row.appendChild(resetBtn);
+
+            right.appendChild(row);
+
+            const changedLine = document.createElement('div');
+            changedLine.className = 'changedBadge';
+            changedLine.textContent = `目前值：${JSON.stringify(value)}`;
+            right.appendChild(changedLine);
+
+            card.appendChild(left);
+            card.appendChild(right);
+            return card;
+        }
+
+        function renderFields() {
+            const list = document.getElementById('fieldList');
+            list.innerHTML = '';
+            const data = currentSectionData();
+            const rows = Object.entries(data).filter(([key, value]) => {
+                const desc = describeKey(key);
+                const matched = matchesSearch(key, value, desc);
+                const changed = state.changed.has(`${state.activeSection}.${key}`);
+                return matched && (!state.showChangedOnly || changed);
+            });
+            rows.forEach(([key, value]) => {
+                list.appendChild(renderField(key, value));
+            });
+
+            document.getElementById('sectionTitle').textContent = `設定分組 ${state.activeSection}`;
+            document.getElementById('sectionHint').textContent = state.search
+                ? `搜尋關鍵字：${state.search}，目前顯示 ${rows.length} 個欄位。`
+                : `目前顯示 ${rows.length} 個欄位。`;
+            document.getElementById('sectionSummary').textContent = state.showChangedOnly ? '只顯示已修改欄位' : '顯示全部欄位';
+        }
+
+        function renderAll(updateTabs = true) {
+            if (updateTabs) buildTabs();
+            buildMetaRow();
+            renderFields();
+            updateStats();
+        }
+
+        async function loadFromFile(file) {
+            if (!file) {
+                throw new Error('請先選擇一個 JSON 檔案');
+            }
+
+            const raw = await file.text();
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                throw new Error('檔案內容格式不正確，必須是 JSON 物件');
+            }
+
+            state.fileName = file.name;
+            state.original = clone(parsed);
+            state.data = clone(parsed);
+            state.activeSection = Object.keys(state.data)[0] || '0';
+            state.changed.clear();
+            document.getElementById('filePath').textContent = `已匯入：${state.fileName}`;
+            renderAll();
+            setStatus('已匯入設定檔，可以開始編輯。', 'good');
+        }
+
+        async function loadBundledDefault() {
+            setStatus('正在載入內建預設 ...');
+            const response = await fetch('./GameXishu.json', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error('無法載入內建預設檔，請改用匯入 JSON');
+            }
+
+            const text = await response.text();
+            const parsed = JSON.parse(text);
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                throw new Error('內建預設檔格式不正確');
+            }
+
+            state.fileName = 'GameXishu.json';
+            state.original = clone(parsed);
+            state.data = clone(parsed);
+            state.activeSection = Object.keys(state.data)[0] || '0';
+            state.changed.clear();
+            document.getElementById('filePath').textContent = '已載入內建預設 GameXishu.json';
+            renderAll();
+            setStatus('已載入內建預設，可以直接切換難度預設編輯。', 'good');
+        }
+
+        function exportJson() {
+            if (!state.data) {
+                setStatus('請先匯入 JSON 檔案。', 'error');
+                return;
+            }
+
+            const baseName = state.fileName ? state.fileName.replace(/\.json$/i, '') : 'GameXishu';
+            const blob = new Blob([JSON.stringify(state.data, null, 2) + '\n'], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${baseName}_edited.json`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            setStatus(`已另存新檔：${baseName}_edited.json`, 'good');
+        }
+
+        function resetActiveSection() {
+            if (!state.original) {
+                setStatus('請先匯入 JSON 檔案。', 'error');
+                return;
+            }
+
+            const originalSection = state.original?.[state.activeSection];
+            if (!originalSection) return;
+            state.data[state.activeSection] = clone(originalSection);
+            rebuildChangedState();
+            renderAll();
+            setStatus(`已還原分組 ${state.activeSection}。`, 'warn');
+        }
+
+        async function importSelectedFile() {
+            const input = document.getElementById('fileInput');
+            const file = input.files?.[0];
+            try {
+                await loadFromFile(file);
+            } catch (error) {
+                setStatus(error.message, 'error');
+            }
+        }
+
+        function openFilePicker() {
+            document.getElementById('fileInput').click();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (event) => {
+            state.search = event.target.value.trim();
+            renderAll(false);
+        });
+
+        document.getElementById('showChangedOnly').addEventListener('change', (event) => {
+            state.showChangedOnly = event.target.checked;
+            renderAll(false);
+        });
+
+        document.getElementById('fileInput').addEventListener('change', importSelectedFile);
+        document.getElementById('importBtn').addEventListener('click', openFilePicker);
+        document.getElementById('difficultySelect').addEventListener('change', (event) => {
+            state.selectedDifficulty = event.target.value;
+            applyDifficultyPreset();
+        });
+        document.getElementById('applyDifficultyBtn').addEventListener('click', applyDifficultyPreset);
+        document.getElementById('loadDefaultBtn').addEventListener('click', async () => {
+            try {
+                await loadBundledDefault();
+            } catch (error) {
+                setStatus(error.message, 'error');
+            }
+        });
+
+        document.getElementById('reloadBtn').addEventListener('click', async () => {
+            try {
+                await loadBundledDefault();
+            } catch {
+                openFilePicker();
+            }
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', exportJson);
+        document.getElementById('resetBtn').addEventListener('click', resetActiveSection);
+
+        updateStats();
+        buildTabs();
+        buildMetaRow();
+        renderFields();
+
+        loadBundledDefault().catch(() => {
+            setStatus('無法自動載入內建預設，請使用「匯入並讀取設定」。', 'warn');
+        });
+    </script>
+</body>
+
+</html>
