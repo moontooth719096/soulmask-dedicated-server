@@ -73,8 +73,6 @@ docker run -d \
 
 如果你的瀏覽器不允許直接讀取同資料夾的內建預設檔，請改用「匯入並讀取設定」。
 
-這個編輯器是純前端的，不需要另外啟動後端服務。
-
 ## 備註
 
 這份 image 預設會先下載並安裝 Soulmask dedicated server，再啟動對應的 server launcher。若官方更新了啟動腳本名稱，只需要調整 [docker-entrypoint.sh](docker-entrypoint.sh) 的 launcher 搜尋條件即可。
