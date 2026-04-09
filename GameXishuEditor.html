@@ -635,6 +635,7 @@
         };
 
         const DIFFICULTY_NAMES = ['Casual', 'Easy', 'Normal', 'Hard', 'Master'];
+        const DIFFICULTY_PRESET_OFFSET = 1;
         const DIFFICULTY_LABELS = {
             Casual: '休閒',
             Easy: '簡單',
@@ -1777,7 +1778,8 @@
                 for (const [key, value] of Object.entries(section)) {
                     const preset = getDifficultyPreset(key);
                     if (!preset) continue;
-                    const nextValue = preset[difficultyIndex];
+                    const presetIndex = Math.min(difficultyIndex + DIFFICULTY_PRESET_OFFSET, preset.length - 1);
+                    const nextValue = preset[presetIndex];
                     if (nextValue === undefined) continue;
                     section[key] = coercePresetValue(value, nextValue);
                     updatedFields += 1;
