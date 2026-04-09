@@ -326,6 +326,11 @@
             box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12) inset;
         }
 
+        .fieldCard.invalid {
+            border-color: rgba(251, 113, 133, 0.7);
+            box-shadow: 0 0 0 1px rgba(251, 113, 133, 0.18) inset;
+        }
+
         .fieldTitle {
             display: flex;
             flex-wrap: wrap;
@@ -352,6 +357,13 @@
             color: var(--muted);
             font-size: 13px;
             line-height: 1.55;
+        }
+
+        .fieldDetail {
+            margin-top: 6px;
+            color: #cbd5e1;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
         .fieldMeta {
@@ -525,13 +537,13 @@
             <div class="panel">
                 <span class="label">難度預設</span>
                 <select id="difficultySelect">
-                    <option value="Casual">Casual</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Normal" selected>Normal</option>
-                    <option value="Hard">Hard</option>
-                    <option value="Master">Master</option>
+                    <option value="Casual">休閒</option>
+                    <option value="Easy">簡單</option>
+                    <option value="Normal" selected>標準</option>
+                    <option value="Hard">困難</option>
+                    <option value="Master">大師</option>
                 </select>
-                <div class="fileHint">選擇難度後，編輯器會把對應的 Defaults per Difficulty 套用到目前載入的資料。</div>
+                <div class="fileHint">選擇難度後，編輯器會把對應的預設值套用到目前載入的資料。</div>
                 <div class="toolbar" style="margin-top:10px;">
                     <button class="btn secondary" id="applyDifficultyBtn">套用到所有分組</button>
                 </div>
@@ -563,7 +575,7 @@
                 <div class="footerHint">
                     1. 先匯入你自己的 GameXishu.json。<br />
                     2. 左側切換 0 / 1 / 2 三組設定。<br />
-                    3. 右側先選 Casual / Easy / Normal / Hard / Master，再套用難度預設。<br />
+                    3. 右側先選 休閒 / 簡單 / 標準 / 困難 / 大師，再套用難度預設。<br />
                     4. 編輯完成後用「另存新檔」下載新 JSON。<br />
                     5. 0 / 1 類開關會盡量顯示成切換按鈕。<br />
                     6. 搜尋會同時比對原始欄位名與中文描述。
@@ -609,6 +621,7 @@
         </main>
     </div>
 
+    <script src="./GameXishuBundled.js"></script>
     <script>
         const state = {
             fileName: '',
@@ -622,6 +635,13 @@
         };
 
         const DIFFICULTY_NAMES = ['Casual', 'Easy', 'Normal', 'Hard', 'Master'];
+        const DIFFICULTY_LABELS = {
+            Casual: '休閒',
+            Easy: '簡單',
+            Normal: '標準',
+            Hard: '困難',
+            Master: '大師',
+        };
 
         const DIFFICULTY_PRESETS = {
             AddRenKeDuRatio: ['1', '10', '2', '1', '1'],
@@ -1133,6 +1153,164 @@
             SOULMASK_LEVEL_NAME: '載入地圖名稱',
         };
 
+        const SETTING_DESCRIPTIONS = {
+            AddRenKeDuRatio: '玩家馴服或招募人形 NPC 時的認知／接受度成長倍率，數值越高越快。',
+            GameWorldDayTimePortion: '白天時間流逝比例，影響白天與夜晚的世界時間速度。',
+            GameWorldTimePower: '遊戲內世界時間倍率，數值越高代表一天過得越快。',
+            ChongsuRatio: '復活或重塑後的冷卻倍率，數值越高代表等待時間越長。',
+            XiuMianDistance: 'AI 控制單位在玩家周圍超出多遠後會進入休眠停擺。',
+            HuanXingDistance: 'AI 控制單位在玩家周圍進入活動狀態的距離。',
+            GongHuiMaxZhaoMuCount: '公會可招募的人形 NPC 最大數量。',
+            GeRenMaxZhaoMuCount: '面具等級 1 解鎖後，個人可招募數量的加值。',
+            GeRenMaxZhaoMuCount_Two: '面具等級 2 解鎖後，個人可招募數量的加值。',
+            GeRenMaxZhaoMuCount_Three: '面具等級 3 解鎖後，個人可招募數量的加值。',
+            XinQingZengZhang: '族人心情增加時的倍率。',
+            XinQingJianShao: '族人心情減少時的倍率。',
+            GongHuiMaxDongWuCount: '公會可擁有的動物最大數量。',
+            GeRenMaxDongWuCount: '單一玩家可擁有的動物最大數量。',
+            BaoXiangDiaoLuoDengJi: '寶箱掉落等級，用來控制寶箱掉落內容。',
+            WuLiYouHuaDist: '超出此距離後，物理運算會以較低成本方式執行。',
+            XiuMianOfflineDays: '玩家離線後，族人持續工作到進入休眠前所需的天數。',
+            TiaoWuLengQueTime: '族人在營火跳舞後的冷卻時間，單位為小時。',
+            XinXiLuRu: '可供玩家儲存並後續復活的族人資訊上限。',
+            MaxFuZhongRatio: '最大負重倍率，影響角色可攜帶的重量上限。',
+            RoleBagCapacity: '玩家背包格數上限。',
+            GeRenBiaoJiMaxCount: '單一玩家可建立的個人標記上限。',
+            GongHuiBiaoJiMaxCount: '公會共用標記上限。',
+            GongHuiMaxMember: '公會成員上限。',
+            ZhaoHuanDisRatio: '召喚坐騎或 NPC 到身邊時的距離倍率。',
+            ConverPropsSpeedRatio: '神秘轉換器的轉換速度倍率。',
+            MaxConvertCount: '單次可由神秘轉換器轉換的最大數量。',
+            KurmaFuZhongRatio: 'Kurma 平台動物負重倍率。',
+            GongHuiMaxSpecDongWuCount: '公會可擁有的特殊動物最大數量。',
+            GeRenMaxSpecDongWuCount: '玩家可擁有的特殊動物最大數量。',
+            AnimalFollowerMaxCount: '玩家同時可跟隨的動物最大數量。',
+            MaxConveyorCount: '單一玩家或公會可建造的輸送帶上限。',
+            MaxDongLiKuangChangCount: '單一玩家或公會可建造的動力礦場上限。',
+            ExpRatio: '意識經驗倍率。',
+            ChengZhangExpRatio: '角色成長經驗倍率。',
+            MJExpRatio: '面具經驗倍率。',
+            ShuLianDuExpRatio: '熟練度經驗倍率。',
+            CaiJiExpRatio: '採集經驗倍率。',
+            ZhiZuoExpRatio: '製作經驗倍率。',
+            ShaGuaiExpRatio: '擊殺怪物經驗倍率。',
+            QiTaExpRatio: '其他來源經驗倍率。',
+            BeiDongYiJiShuXingRatio: '角色升級時的被動一級屬性成長倍率。',
+            ZhuDongYiJiShuXingRatio: '角色升級時的主動一級屬性成長倍率。',
+            ErJiShuXingRatio: '角色升級時的二級屬性成長倍率。',
+            MaRenBeiDongYiJiShuXingRatio: '蠻人被動一級屬性成長倍率。',
+            MaRenZhuDongYiJiShuXingRatio: '蠻人主動一級屬性成長倍率。',
+            MaRenErJiShuXingRatio: '蠻人二級屬性成長倍率。',
+            DongWuBeiDongYiJiShuXingRatio: '動物被動一級屬性成長倍率。',
+            DongWuZhuDongYiJiShuXingRatio: '動物主動一級屬性成長倍率。',
+            DongWuErJiShuXingRatio: '動物二級屬性成長倍率。',
+            ShaGuaiExpShareRatio: '擊殺經驗分享倍率，會分給同部落附近玩家。',
+            ZuoWuDropRatio: '作物收成掉落倍率。',
+            ZuoWuShengZhangRatio: '作物生長速度倍率。',
+            ZhiZuoTimeRatio: '製作速度倍率。',
+            BaoXiangDropRatio: '寶箱掉落倍率。',
+            CaiJiDamageRatio: '對採集物件的傷害／採集效率倍率。',
+            ZiYuanShengMingRatio: '資源生命值倍率，會影響資源總產量。',
+            DongWuShengZhangRatio: '動物成長速度倍率。',
+            FanZhiJianGeRatio: '動物繁殖間隔倍率。',
+            DongWuShengChanJianGeRatio: '動物生產間隔倍率。',
+            DongWuChanChuRatio: '動物產出倍率。',
+            ZuoWuXiaoHuiRatio: '作物未收成時的損耗速度倍率。',
+            FuHuaSpeed: '蛋的孵化速度倍率。',
+            JianZhuFuLanMul: '建築腐爛速度倍率。',
+            JianZhuXiuLiMul: '建築修理與回復速度倍率。',
+            YeShengHitJianZhuShangHaiRatio: '野外敵對單位對建築的傷害倍率。',
+            WanJiaHitJianZhuShangHaiRatio: '玩家與玩家單位對建築的傷害倍率。',
+            YingHuoRanShaoSuDuRatio: '營火燃燒燃料的速度倍率。',
+            PVP_ShangHaiRatio_JinZhan: 'PVP 近戰傷害倍率。',
+            PVP_ShangHaiRatio_YuanCheng: 'PVP 遠程傷害倍率。',
+            PVP_ShangHaiRatio_PlayerToPlayer_DiFang: '玩家對敵方玩家的額外傷害倍率。',
+            PVP_GAPVPDamageRatio: '公會 / 群組 PVP 傷害調整倍率。',
+            PVP_ShangHaiRatio_PlayerToPlayer_YouFang: '玩家對友方玩家的傷害倍率。',
+            RollingInvincibleTimeRatio: '翻滾無敵時間倍率。',
+            NaiJiuXiShu: '耐久消耗倍率。',
+            ShiWuXiaoHaoRatio: '飽食度消耗速度倍率。',
+            ShuiXiaoHaoRatio: '水分消耗速度倍率。',
+            QiXiXiaoHaoRatio: '氣息消耗速度倍率。',
+            ShengMingHuiFuRatio: '生命恢復速度倍率。',
+            TiLiHuiFuRatio: '體力恢復速度倍率。',
+            QiXiHuiFuRatio: '氣息恢復速度倍率。',
+            DongWuDamageRatio: '野獸與機械單位對玩家的傷害倍率。',
+            DongWuJianShangRatio: '玩家對野獸與機械單位的傷害倍率。',
+            MaRenDamageRatio: '野蠻人對玩家的傷害倍率。',
+            ManRenJianShangRatio: '玩家對野蠻人的傷害倍率。',
+            GongJiJianZhuDamageRatio: '玩家與玩家單位攻擊建築的傷害倍率。',
+            RuQinGuiMoXiShu: '入侵怪物規模倍率。',
+            RuQinQiangDuXiShu: '入侵怪物強度倍率。',
+            RuQinGuaiCountMin: '入侵每波怪物最少數量。',
+            RuQinGuaiCountMax: '入侵每波怪物最多數量。',
+            RuQinPerBoGuaiMin: '單波入侵最少怪物數量。',
+            RuQinPerBoGuaiMax: '單波入侵最多怪物數量。',
+            RuQinGuaiLevelXiShu: '入侵怪物等級倍率。',
+            TanChaMinuteLimit: '入侵前偵查警告時間上限。',
+            JinGongMinuteLimit: '入侵持續時間上限。',
+            LengQueMinuteLimit: '同一部落兩次入侵之間的冷卻時間。',
+            RuQinMaxChangCiCount: '入侵同時場次上限。',
+            RuQinBeginHour: '允許發生入侵的開始小時。',
+            RuQinEndHour: '允許發生入侵的結束小時。',
+            RuQinShaoChengXiShu: '入侵燒城係數。',
+            RuQinTuShaXiShu: '入侵屠殺係數。',
+            PVPTimeAsiaWorkStartTime: '亞洲伺服器工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeAsiaWorkEndTime: '亞洲伺服器工作日 PVP 結束時間，使用 UTC。',
+            PVPTimeAsiaNoWorkStartTime: '亞洲伺服器非工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeAsiaNoWorkEndTime: '亞洲伺服器非工作日 PVP 結束時間，使用 UTC。',
+            PVPTimeAmericaWorkStartTime: '美洲伺服器工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeAmericaWorkEndTime: '美洲伺服器工作日 PVP 結束時間，使用 UTC。',
+            PVPTimeAmericaNoWorkStartTime: '美洲伺服器非工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeAmericaNoWorkEndTime: '美洲伺服器非工作日 PVP 結束時間，使用 UTC。',
+            PVPTimeEuropeWorkStartTime: '歐洲伺服器工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeEuropeWorkEndTime: '歐洲伺服器工作日 PVP 結束時間，使用 UTC。',
+            PVPTimeEuropeNoWorkStartTime: '歐洲伺服器非工作日 PVP 開始時間，使用 UTC。',
+            PVPTimeEuropeNoWorkEndTime: '歐洲伺服器非工作日 PVP 結束時間，使用 UTC。',
+            AsiaWarTimeStart: '亞洲跨服戰開始時間。',
+            AsiaWarTimeEnd: '亞洲跨服戰結束時間。',
+            EuropeWarTimeStart: '歐洲跨服戰開始時間。',
+            EuropeWarTimeEnd: '歐洲跨服戰結束時間。',
+            AmericaWarTimeStart: '美洲跨服戰開始時間。',
+            AmericaWarTimeEnd: '美洲跨服戰結束時間。',
+            SpecialEventGameDist: '特殊事件適用區域，0-AS、1-EU、2-NA。',
+            SpecialEventAsiaStartTime: '亞洲區特殊事件開始時間（UTC）。',
+            SpecialEventAsiaEndTime: '亞洲區特殊事件結束時間（UTC）。',
+            SpecialEventEuropeStartTime: '歐洲區特殊事件開始時間（UTC）。',
+            SpecialEventEuropeEndTime: '歐洲區特殊事件結束時間（UTC）。',
+            SpecialEventAmericaStartTime: '美洲區特殊事件開始時間（UTC）。',
+            SpecialEventAmericaEndTime: '美洲區特殊事件結束時間（UTC）。',
+            SpecialEventTriggerInterval: '特殊事件觸發間隔，單位為秒。',
+            SpecialEventTriggerPercent: '特殊事件觸發機率。',
+            SpecialEventTriggetLimitNum: '特殊事件在有效時間內的觸發次數上限。',
+            SpecialEventServerOpenDay: '開服後幾天開始啟用特殊事件。',
+            BinSiKaiGuan: '瀕死狀態開關。',
+            JianZhuFuLanKaiGuan: '建築腐爛開關。',
+            FuHuoMoveSiWangBaoKaiGuan: '復活時是否移動死亡掉落包。',
+            JianZhuChuanSongMenPlusKaiGuan: '是否允許玩家攜帶物品通過傳送門。',
+            SuiJiRuQinKaiGuan: '隨機入侵開關。',
+            RuQinKaiGuan: '入侵開關。',
+            ShuaXinNPCKaiGuan: 'NPC 刷新開關。',
+            PVEOnlyTongGuiShuCanOpenKaiGuan: 'PVE 模式下只有同部落成員可拾取死亡包。',
+            PanpaKaiGuan: '攀爬開關。',
+            KaiQiJianZhuHuiXueBuilding: '建築回血開關。',
+            HuXIangShangHaiKaiGuan: 'PVP 模式開關。',
+            PlayerYouFangShangHaiKaiGuan: '玩家友方傷害開關。',
+            YouFangShangHaiKaiGuan: '友方傷害開關。',
+            KaiQiKuaFu: '跨服開關。',
+            MovementYouHua: '移動優化開關。',
+            WuLiYouHuaKaiGuan: '物理優化開關。',
+            JingShenNoXiaoHao: '精神值不消耗開關。',
+            TeShuDaoJuDropXiShuJiaChengKaiGuan: '特殊道具掉落加成套用開關。',
+            BanGlider: '禁用滑翔翼開關。',
+            JianZhuMirageKaiGuan: '預建築 / 幻影建築開關。',
+            ProtectJianZhuInYingHuoSwitch: '營火範圍內建築保護開關。',
+            SpecialEventConfigSwitch: '特殊事件參數調整開關。',
+            IsPlayBossAppearanceSequence: 'Boss 登場動畫開關。',
+            IgnoreEnemyJianZhuInSelfYingHuo: '營火範圍內忽略敵方建築開關。',
+            SOULMASK_LEVEL_NAME: '伺服器啟動時載入的地圖／關卡名稱。',
+        };
+
         const TOKEN_MAP = [
             ['PVPTime', 'PVP 時段'],
             ['PVP_ShangHaiRatio', 'PVP 傷害倍率'],
@@ -1265,8 +1443,113 @@
             return text || '欄位';
         }
 
+        function describeSetting(key) {
+            return SETTING_DESCRIPTIONS[key] || '';
+        }
+
         function isBoolLike(key, value) {
             return typeof value === 'boolean' || (typeof value === 'number' && (value === 0 || value === 1) && BOOLEAN_HINTS.some((hint) => key.includes(hint)));
+        }
+
+        function isPartialNumericInput(text) {
+            return /^[+-]?(?:\d+\.?\d*|\.?\d*)$/.test(text) && !/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(text);
+        }
+
+        function parseNumericInput(text) {
+            if (text === '') return null;
+            const numericValue = Number(text);
+            return Number.isNaN(numericValue) ? null : numericValue;
+        }
+
+        function formatRangeDisplay(rangeText, sectionKey) {
+            const parts = String(rangeText).split(' / ').map((part) => part.trim()).filter(Boolean);
+            if (parts.length <= 1) return `參考範圍：${rangeText}`;
+
+            const sectionIndex = Number(sectionKey);
+            const selectedRange = Number.isInteger(sectionIndex) && sectionIndex >= 0 && sectionIndex < parts.length
+                ? parts[sectionIndex]
+                : parts[0];
+
+            return `參考範圍：${selectedRange}`;
+        }
+
+        function getRangeSegment(rangeText, sectionKey) {
+            const parts = String(rangeText).split(' / ').map((part) => part.trim()).filter(Boolean);
+            if (!parts.length) return '';
+
+            const sectionIndex = Number(sectionKey);
+            if (Number.isInteger(sectionIndex) && sectionIndex >= 0 && sectionIndex < parts.length) {
+                return parts[sectionIndex];
+            }
+
+            return parts[0];
+        }
+
+        function parseRangeSpec(rangeText) {
+            const text = String(rangeText).trim();
+            if (!text) return null;
+
+            if (text.includes('/')) {
+                const numericOptions = text.split('/').map((part) => Number(part.trim())).filter((value) => !Number.isNaN(value));
+                if (numericOptions.length > 1 && numericOptions.length === text.split('/').map((part) => part.trim()).filter(Boolean).length) {
+                    return { kind: 'set', values: numericOptions };
+                }
+            }
+
+            const rangeMatch = text.match(/^([+-]?\d+(?:\.\d+)?)\s*-\s*([+-]?\d+(?:\.\d+)?)$/);
+            if (rangeMatch) {
+                return { kind: 'range', min: Number(rangeMatch[1]), max: Number(rangeMatch[2]) };
+            }
+
+            if (/^[+-]?\d+(?:\.\d+)?$/.test(text)) {
+                return { kind: 'exact', value: Number(text) };
+            }
+
+            return null;
+        }
+
+        function getRangeIssue(key, value, sectionKey) {
+            const meta = RANGE_META[key];
+            if (!meta || typeof value !== 'number' || Number.isNaN(value)) return null;
+
+            const rangeText = getRangeSegment(meta.range, sectionKey);
+            const spec = parseRangeSpec(rangeText);
+            if (!spec) return null;
+
+            if (spec.kind === 'range') {
+                const min = Math.min(spec.min, spec.max);
+                const max = Math.max(spec.min, spec.max);
+                if (value < min || value > max) {
+                    return { rangeText, message: `超出範圍 ${rangeText}` };
+                }
+                return null;
+            }
+
+            if (spec.kind === 'exact' && value !== spec.value) {
+                return { rangeText, message: `必須等於 ${rangeText}` };
+            }
+
+            if (spec.kind === 'set' && !spec.values.some((item) => item === value)) {
+                return { rangeText, message: `必須是 ${rangeText} 之一` };
+            }
+
+            return null;
+        }
+
+        function collectRangeIssues() {
+            const issues = [];
+            if (!state.data) return issues;
+
+            for (const [sectionKey, sectionValue] of Object.entries(state.data)) {
+                for (const [key, value] of Object.entries(sectionValue)) {
+                    const issue = getRangeIssue(key, value, sectionKey);
+                    if (issue) {
+                        issues.push({ sectionKey, key, value, ...issue });
+                    }
+                }
+            }
+
+            return issues;
         }
 
         function clone(value) {
@@ -1321,7 +1604,7 @@
             const items = Object.entries(data);
             const visible = items.filter(([key, value]) => matchesSearch(key, value, describeKey(key)));
             const chipTexts = [
-                `難度：${state.selectedDifficulty}`,
+                `難度：${DIFFICULTY_LABELS[state.selectedDifficulty] || state.selectedDifficulty}`,
                 `原始欄位：${items.length}`,
                 `顯示中：${visible.length}`,
                 `已修改：${state.changed.size}`,
@@ -1395,29 +1678,38 @@
 
             rebuildChangedState();
             renderAll();
-            setStatus(`已套用 ${state.selectedDifficulty} 難度預設，更新了 ${updatedFields} 個欄位。`, 'good');
+            setStatus(`已套用 ${DIFFICULTY_LABELS[state.selectedDifficulty] || state.selectedDifficulty} 難度預設，更新了 ${updatedFields} 個欄位。`, 'good');
         }
 
         function renderField(key, value) {
             const original = state.original?.[state.activeSection]?.[key];
             const changed = JSON.stringify(original) !== JSON.stringify(value);
             const desc = describeKey(key);
+            const detail = describeSetting(key);
             const meta = RANGE_META[key];
             const type = guessType(key, value);
+            const rangeIssue = getRangeIssue(key, value, state.activeSection);
             const card = document.createElement('div');
-            card.className = `fieldCard ${changed ? 'changed' : ''}`;
+            card.className = `fieldCard ${changed ? 'changed' : ''} ${rangeIssue ? 'invalid' : ''}`;
             card.dataset.key = key;
-            card.dataset.search = `${key} ${desc} ${String(value)}`.toLowerCase();
+            card.dataset.search = `${key} ${desc} ${detail} ${String(value)}`.toLowerCase();
 
             const left = document.createElement('div');
             const title = document.createElement('div');
             title.className = 'fieldTitle';
-            title.innerHTML = `<span class="key">${key}</span><span class="kind">${type}</span>${changed ? '<span class="kind" style="background:rgba(251,191,36,0.16);color:#fde68a;border-color:rgba(251,191,36,0.22)">已修改</span>' : ''}`;
+            title.innerHTML = `<span class="key">${key}</span><span class="kind">${type}</span>${changed ? '<span class="kind" style="background:rgba(251,191,36,0.16);color:#fde68a;border-color:rgba(251,191,36,0.22)">已修改</span>' : ''}${rangeIssue ? '<span class="kind" style="background:rgba(251,113,133,0.16);color:#fecaca;border-color:rgba(251,113,133,0.22)">超出範圍</span>' : ''}`;
             const descBox = document.createElement('div');
             descBox.className = 'fieldDesc';
             descBox.textContent = desc;
             left.appendChild(title);
             left.appendChild(descBox);
+
+            if (detail) {
+                const detailBox = document.createElement('div');
+                detailBox.className = 'fieldDetail';
+                detailBox.textContent = `Description：${detail}`;
+                left.appendChild(detailBox);
+            }
 
             if (meta) {
                 const metaRow = document.createElement('div');
@@ -1425,16 +1717,8 @@
 
                 const rangeChip = document.createElement('span');
                 rangeChip.className = 'metaChip';
-                rangeChip.textContent = `範圍：${meta.range}`;
+                rangeChip.textContent = formatRangeDisplay(meta.range, state.activeSection);
                 metaRow.appendChild(rangeChip);
-
-                const difficultyPreset = getDifficultyPreset(key);
-                if (difficultyPreset) {
-                    const presetChip = document.createElement('span');
-                    presetChip.className = 'metaChip';
-                    presetChip.textContent = DIFFICULTY_NAMES.map((difficulty, index) => `${difficulty}:${difficultyPreset[index]}`).join('  ');
-                    metaRow.appendChild(presetChip);
-                }
 
                 left.appendChild(metaRow);
             }
@@ -1445,6 +1729,37 @@
             const row = document.createElement('div');
             row.className = 'valueRow';
 
+            const fieldMeta = { errorLine: null };
+
+            const refreshFieldState = (nextValue) => {
+                const currentOriginal = state.original?.[state.activeSection]?.[key];
+                const isChanged = JSON.stringify(currentOriginal) !== JSON.stringify(nextValue);
+                const nextRangeIssue = getRangeIssue(key, nextValue, state.activeSection);
+
+                card.className = `fieldCard ${isChanged ? 'changed' : ''} ${nextRangeIssue ? 'invalid' : ''}`;
+                title.innerHTML = `<span class="key">${key}</span><span class="kind">${type}</span>${isChanged ? '<span class="kind" style="background:rgba(251,191,36,0.16);color:#fde68a;border-color:rgba(251,191,36,0.22)">已修改</span>' : ''}${nextRangeIssue ? '<span class="kind" style="background:rgba(251,113,133,0.16);color:#fecaca;border-color:rgba(251,113,133,0.22)">超出範圍</span>' : ''}`;
+                changedLine.textContent = `目前值：${JSON.stringify(nextValue)}`;
+
+                if (nextRangeIssue) {
+                    if (!fieldMeta.errorLine) {
+                        fieldMeta.errorLine = document.createElement('div');
+                        fieldMeta.errorLine.className = 'notice error';
+                        right.appendChild(fieldMeta.errorLine);
+                    }
+                    fieldMeta.errorLine.textContent = `設定值有異常：${nextRangeIssue.message}`;
+                } else if (fieldMeta.errorLine) {
+                    fieldMeta.errorLine.remove();
+                    fieldMeta.errorLine = null;
+                }
+
+                if (state.showChangedOnly) {
+                    card.style.display = isChanged ? '' : 'none';
+                }
+
+                buildMetaRow();
+                updateStats();
+            };
+
             let editor;
             if (isBoolLike(key, value)) {
                 editor = document.createElement('select');
@@ -1452,9 +1767,13 @@
                 editor.value = String(Number(value));
             } else if (typeof value === 'number') {
                 editor = document.createElement('input');
-                editor.type = 'number';
-                editor.step = Number.isInteger(value) ? '1' : 'any';
+                editor.type = 'text';
+                editor.inputMode = 'decimal';
+                editor.spellcheck = false;
                 editor.value = String(value);
+                editor.addEventListener('blur', () => {
+                    editor.value = String(state.data?.[state.activeSection]?.[key] ?? value);
+                });
             } else {
                 const longText = String(value).length > 48;
                 editor = longText ? document.createElement('textarea') : document.createElement('input');
@@ -1469,15 +1788,18 @@
                 if (isBoolLike(key, current)) {
                     nextValue = Number(editor.value);
                 } else if (typeof current === 'number') {
-                    nextValue = editor.value === '' ? 0 : Number(editor.value);
-                    if (Number.isNaN(nextValue)) return;
+                    const rawValue = editor.value.trim();
+                    if (isPartialNumericInput(rawValue)) return;
+                    const parsedValue = parseNumericInput(rawValue);
+                    if (parsedValue === null) return;
+                    nextValue = parsedValue;
                 }
                 state.data[state.activeSection][key] = nextValue;
                 const originalValue = state.original?.[state.activeSection]?.[key];
                 const isChanged = JSON.stringify(originalValue) !== JSON.stringify(nextValue);
                 if (isChanged) state.changed.add(`${state.activeSection}.${key}`);
                 else state.changed.delete(`${state.activeSection}.${key}`);
-                renderAll(false);
+                refreshFieldState(nextValue);
             };
 
             row.appendChild(editor);
@@ -1509,6 +1831,14 @@
             changedLine.className = 'changedBadge';
             changedLine.textContent = `目前值：${JSON.stringify(value)}`;
             right.appendChild(changedLine);
+
+            if (rangeIssue) {
+                const errorLine = document.createElement('div');
+                errorLine.className = 'notice error';
+                errorLine.textContent = `設定值有異常：${rangeIssue.message}`;
+                fieldMeta.errorLine = errorLine;
+                right.appendChild(errorLine);
+            }
 
             card.appendChild(left);
             card.appendChild(right);
@@ -1566,20 +1896,32 @@
 
         async function loadBundledDefault() {
             setStatus('正在載入內建預設 ...');
-            const response = await fetch('./GameXishu.json', { cache: 'no-store' });
-            if (!response.ok) {
-                throw new Error('無法載入內建預設檔，請改用匯入 JSON');
+            const bundled = window.BUNDLED_GAMEXISHU;
+            const parsed = bundled && typeof bundled === 'object' && !Array.isArray(bundled)
+                ? clone(bundled)
+                : null;
+
+            if (!parsed) {
+                const response = await fetch('./GameXishu.json', { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('無法載入內建預設檔，請改用匯入 JSON');
+                }
+
+                const text = await response.text();
+                const fallbackParsed = JSON.parse(text);
+                if (!fallbackParsed || typeof fallbackParsed !== 'object' || Array.isArray(fallbackParsed)) {
+                    throw new Error('內建預設檔格式不正確');
+                }
+
+                state.fileName = 'GameXishu.json';
+                state.original = clone(fallbackParsed);
+                state.data = clone(fallbackParsed);
+            } else {
+                state.fileName = 'GameXishu.json';
+                state.original = clone(parsed);
+                state.data = clone(parsed);
             }
 
-            const text = await response.text();
-            const parsed = JSON.parse(text);
-            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-                throw new Error('內建預設檔格式不正確');
-            }
-
-            state.fileName = 'GameXishu.json';
-            state.original = clone(parsed);
-            state.data = clone(parsed);
             state.activeSection = Object.keys(state.data)[0] || '0';
             state.changed.clear();
             document.getElementById('filePath').textContent = '已載入內建預設 GameXishu.json';
@@ -1591,6 +1933,19 @@
             if (!state.data) {
                 setStatus('請先匯入 JSON 檔案。', 'error');
                 return;
+            }
+
+            const issues = collectRangeIssues();
+            if (issues.length) {
+                const preview = issues.slice(0, 5).map((issue) => `分組 ${issue.sectionKey} / ${issue.key} = ${JSON.stringify(issue.value)}：${issue.message}`).join('\n');
+                const more = issues.length > 5 ? `\n還有 ${issues.length - 5} 個欄位超出範圍。` : '';
+                const message = `偵測到設定值有異常，是否仍要匯出？\n\n${preview}${more}`;
+                const shouldContinue = window.confirm(message);
+                if (!shouldContinue) {
+                    setStatus('已取消匯出，請先修正異常設定。', 'warn');
+                    renderAll(false);
+                    return;
+                }
             }
 
             const baseName = state.fileName ? state.fileName.replace(/\.json$/i, '') : 'GameXishu';
