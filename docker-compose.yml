@@ -1,0 +1,24 @@
+services:
+  soulmask:
+    build:
+      context: .
+    image: soulmask-dedicated-server:latest
+    container_name: soulmask-dedicated-server
+    restart: unless-stopped
+    ports:
+      - "8777:8777/tcp"
+      - "8777:8777/udp"
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+      - "18888:18888/tcp"
+    environment:
+      SOULMASK_SERVER_NAME: "Soulmask Server"
+      SOULMASK_MAX_PLAYERS: "50"
+      SOULMASK_PASSWORD: ""
+      SOULMASK_ADMIN_PASSWORD: ""
+      SOULMASK_PVP: "false"
+    volumes:
+      - soulmask-data:/data/WS/Saved
+
+volumes:
+  soulmask-data:
