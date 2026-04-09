@@ -23,6 +23,7 @@ docker run -d \
   -e SOULMASK_PASSWORD="" \
   -e SOULMASK_ADMIN_PASSWORD="" \
   -e SOULMASK_PVP=false \
+  -e SOULMASK_LEVEL_NAME=Level01_Main \
   -v soulmask-data:/data/WS/Saved \
   soulmask-dedicated-server:latest
 ```
@@ -36,6 +37,7 @@ docker run -d \
 | `SOULMASK_PASSWORD` | 空字串 | 玩家進伺服器時使用的密碼。留空代表不設密碼。 |
 | `SOULMASK_ADMIN_PASSWORD` | 空字串 | 管理員密碼，用於管理指令或後台控制。 |
 | `SOULMASK_PVP` | `false` | `true` 代表 PvP，`false` 代表 PvE。 |
+| `SOULMASK_LEVEL_NAME` | `Level01_Main` | 伺服器啟動時載入的地圖或關卡名稱。 |
 | `SOULMASK_PORT` | `8777` | 遊戲主連線埠。 |
 | `SOULMASK_QUERY_PORT` | `27015` | Steam 查詢埠，用於伺服器列表與狀態查詢。 |
 | `SOULMASK_BACKUP_INTERVAL` | `900` | 備份間隔，單位通常為秒。 |

@@ -51,6 +51,7 @@ server_name="${SOULMASK_SERVER_NAME:-Soulmask-Server}"
 max_players="${SOULMASK_MAX_PLAYERS:-50}"
 password="${SOULMASK_PASSWORD:-}"
 admin_password="${SOULMASK_ADMIN_PASSWORD:-}"
+level_name="${SOULMASK_LEVEL_NAME:-Level01_Main}"
 pvp_flag="-pvp"
 
 if [ "${SOULMASK_PVP:-false}" = "false" ]; then
@@ -58,6 +59,7 @@ if [ "${SOULMASK_PVP:-false}" = "false" ]; then
 fi
 
 launch_args=(
+    "${level_name}"
     "-SteamServerName=${server_name}"
     "-MaxPlayers=${max_players}"
     "-PSW=${password}"

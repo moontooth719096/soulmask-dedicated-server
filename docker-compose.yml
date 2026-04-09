@@ -17,6 +17,7 @@ services:
       SOULMASK_PASSWORD: ""
       SOULMASK_ADMIN_PASSWORD: ""
       SOULMASK_PVP: "false"
+      SOULMASK_LEVEL_NAME: "Level01_Main"
     volumes:
       - soulmask-data:/data/WS/Saved
 
