@@ -626,7 +626,9 @@
         const state = {
             fileName: '',
             original: null,
+            originalRawValues: null,
             data: null,
+            rawValues: null,
             activeSection: '0',
             selectedDifficulty: 'Normal',
             search: '',
@@ -799,6 +801,65 @@
             SpecialEventConfigSwitch: ['0', '0', '0', '0', '0'],
             IsPlayBossAppearanceSequence: ['1', '1', '1', '1', '1'],
             IgnoreEnemyJianZhuInSelfYingHuo: ['1', '1', '1', '1', '1'],
+            BagRepOptimizeSwitch: ['1', '1', '1'],
+            BossEquipDropRatioCorrection: ['1', '1', '1'],
+            BossEquipDurabilityCorrection: ['1', '1', '1'],
+            ChestDropEquipmentMaxQualitySwitch: ['0', '0', '0'],
+            ChuZhanZuRenShaGuaiExpShareRatio: ['1', '1', '1'],
+            CrewCountRatio: ['1', '1', '1'],
+            CurProfInitRatio: ['0', '0', '0'],
+            DongWuBossTenacityDamageRatio: ['1', '1', '1'],
+            DongWuBossTiLiDamageRatio: ['1', '1', '1'],
+            DongWuChuZhanCount: ['1', '1', '1'],
+            DongWuTenacityDamageRatio: ['1', '1', '1'],
+            DongWuTiLiDamageRatio: ['1', '1', '1'],
+            DrawDebugDungeon: ['0', '0', '0'],
+            DungeonReborn: ['1', '1', '1'],
+            EighthDayMaxAwarenessLevel: ['60', '60', '60'],
+            EliteEquipDropRatioCorrection: ['1', '1', '1'],
+            EliteEquipDurabilityCorrection: ['1', '1', '1'],
+            FifthDayMaxAwarenessLevel: ['60', '60', '60'],
+            FirstDayMaxAwarenessLevel: ['60', '60', '60'],
+            FourthDayMaxAwarenessLevel: ['60', '60', '60'],
+            GeRenMaxRaftSpaceCount: ['2', '2', '2'],
+            GeRenMaxSpecRaftSpaceCount: ['1', '1', '1'],
+            GongHuiMaxRaftSpaceCount: ['10', '10', '10'],
+            GongHuiMaxSpecRaftSpaceCount: ['2', '2', '2'],
+            InitialDefaultAwarenessLevel: ['1', '1', '1'],
+            IsOpenGuideTask: ['1', '1', '1'],
+            JinJianQuKaiGuan: ['1', '1', '1'],
+            JiQiChuZhanKaiGuan: ['1', '1', '1'],
+            MainGunUseTimeCD: ['1', '1', '1'],
+            ManageModeRuQin: ['0', '0', '0'],
+            ManageModeRuQinCountDownTimeRatio: ['1', '1', '1'],
+            ManRenBossTenacityDamageRatio: ['1', '1', '1'],
+            ManRenBossTiLiDamageRatio: ['1', '1', '1'],
+            ManRenTenacityDamageRatio: ['1', '1', '1'],
+            ManRenTiLiDamageRatio: ['1', '1', '1'],
+            MaxDiCiCount: ['400', '400', '400'],
+            MaxPingTaiJianZhuNumMul: ['0.10000000149011612', '0.10000000149011612', '0.10000000149011612'],
+            MentalRecoveryRate: ['1', '1', '1'],
+            NinthDayMaxAwarenessLevel: ['60', '60', '60'],
+            NormalEquipDropRatioCorrection: ['1', '1', '1'],
+            NormalEquipDurabilityCorrection: ['1', '1', '1'],
+            OpenEscMenuInfJianZao: ['0', '0', '0'],
+            OtherShaGuaiExpShareRatio: ['1', '1', '1'],
+            PhysicalRecoveryIntervalRate: ['1', '1', '1'],
+            PingTaiAffectNavigation: ['1', '1', '1'],
+            PingTaiBuildRangeLimit: ['1', '1', '1'],
+            PingTaiJianZhuNumLimit: ['1', '1', '1'],
+            PlayerDeathCantDropItemKaiGuan: ['0', '0', '0'],
+            PlayerSweepRangeScale: ['1', '1', '1'],
+            ReboundDifficulty: ['1', '1', '1'],
+            RuQinSucceedPrizeTimes: ['3', '3', '3'],
+            SecondDayMaxAwarenessLevel: ['60', '60', '60'],
+            SeventhDayMaxAwarenessLevel: ['60', '60', '60'],
+            ShipBlueprintBuildConsumeSwitch: ['1', '1', '1'],
+            SixthDayMaxAwarenessLevel: ['60', '60', '60'],
+            TenthDayMaxAwarenessLevel: ['60', '60', '60'],
+            ThirdDayMaxAwarenessLevel: ['60', '60', '60'],
+            TrainingExpRatio: ['1', '1', '1'],
+            ZuRenDirectCunQu: ['0', '1', '0'],
         };
 
         const RANGE_META = {
@@ -1014,6 +1075,65 @@
             SpecialEventConfigSwitch: { range: '0/1', presets: ['0', '0', '0'] },
             IsPlayBossAppearanceSequence: { range: '0/1', presets: ['1', '1', '1'] },
             IgnoreEnemyJianZhuInSelfYingHuo: { range: '0/1', presets: ['1', '1', '1'] },
+            BagRepOptimizeSwitch: { range: '0/1', presets: ['1', '1', '1'] },
+            BossEquipDropRatioCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            BossEquipDurabilityCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            ChestDropEquipmentMaxQualitySwitch: { range: '0/1', presets: ['0', '0', '0'] },
+            ChuZhanZuRenShaGuaiExpShareRatio: { range: '0-10', presets: ['1', '1', '1'] },
+            CrewCountRatio: { range: '0-10', presets: ['1', '1', '1'] },
+            CurProfInitRatio: { range: '0-1', presets: ['0', '0', '0'] },
+            DongWuBossTenacityDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            DongWuBossTiLiDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            DongWuChuZhanCount: { range: '1-100', presets: ['1', '1', '1'] },
+            DongWuTenacityDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            DongWuTiLiDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            DrawDebugDungeon: { range: '0/1', presets: ['0', '0', '0'] },
+            DungeonReborn: { range: '0/1', presets: ['1', '1', '1'] },
+            EighthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            EliteEquipDropRatioCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            EliteEquipDurabilityCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            FifthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            FirstDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            FourthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            GeRenMaxRaftSpaceCount: { range: '1-10', presets: ['2', '2', '2'] },
+            GeRenMaxSpecRaftSpaceCount: { range: '1-10', presets: ['1', '1', '1'] },
+            GongHuiMaxRaftSpaceCount: { range: '1-20', presets: ['10', '10', '10'] },
+            GongHuiMaxSpecRaftSpaceCount: { range: '2-20', presets: ['2', '2', '2'] },
+            InitialDefaultAwarenessLevel: { range: '1-60', presets: ['1', '1', '1'] },
+            IsOpenGuideTask: { range: '0/1', presets: ['1', '1', '1'] },
+            JinJianQuKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            JiQiChuZhanKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            MainGunUseTimeCD: { range: '0-10', presets: ['1', '1', '1'] },
+            ManageModeRuQin: { range: '0/1', presets: ['0', '1', '1'] },
+            ManageModeRuQinCountDownTimeRatio: { range: '0-10', presets: ['1', '1', '1'] },
+            ManRenBossTenacityDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            ManRenBossTiLiDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            ManRenTenacityDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            ManRenTiLiDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
+            MaxDiCiCount: { range: '1-1000', presets: ['400', '400', '400'] },
+            MaxPingTaiJianZhuNumMul: { range: '0-10', presets: ['0.1', '0.1', '0.1'] },
+            MentalRecoveryRate: { range: '0-10', presets: ['1', '1', '1'] },
+            NinthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            NormalEquipDropRatioCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            NormalEquipDurabilityCorrection: { range: '0-5', presets: ['1', '1', '1'] },
+            OpenEscMenuInfJianZao: { range: '0/1', presets: ['0', '0', '0'] },
+            OtherShaGuaiExpShareRatio: { range: '0-10', presets: ['1', '1', '1'] },
+            PhysicalRecoveryIntervalRate: { range: '0-5', presets: ['1', '1', '1'] },
+            PingTaiAffectNavigation: { range: '0/1', presets: ['1', '1', '1'] },
+            PingTaiBuildRangeLimit: { range: '0/1', presets: ['1', '1', '1'] },
+            PingTaiJianZhuNumLimit: { range: '0/1', presets: ['1', '1', '1'] },
+            PlayerDeathCantDropItemKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
+            PlayerSweepRangeScale: { range: '0.1-10', presets: ['1', '1', '1'] },
+            ReboundDifficulty: { range: '0-2', presets: ['1', '0', '0'] },
+            RuQinSucceedPrizeTimes: { range: '1-10', presets: ['3', '3', '3'] },
+            SecondDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            SeventhDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            ShipBlueprintBuildConsumeSwitch: { range: '0/1', presets: ['1', '1', '1'] },
+            SixthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            TenthDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            ThirdDayMaxAwarenessLevel: { range: '1-60', presets: ['60', '60', '60'] },
+            TrainingExpRatio: { range: '0.1-100', presets: ['1', '1', '1'] },
+            ZuRenDirectCunQu: { range: '0/1', presets: ['0', '1', '0'] },
             SOULMASK_LEVEL_NAME: { range: '內建關卡名稱', presets: ['Level01_Main', 'Level01_Main', 'Level01_Main'] },
         };
 
@@ -1209,6 +1329,65 @@
             MaxConveyorCount: '輸送帶上限',
             MaxDongLiKuangChangCount: '動力礦場上限',
             IgnoreEnemyJianZhuInSelfYingHuo: '忽略自己營火範圍內的敵方建築',
+            BagRepOptimizeSwitch: '套件同步優化開關',
+            BossEquipDropRatioCorrection: 'Boss 裝備掉落倍率',
+            BossEquipDurabilityCorrection: 'Boss 裝備耐久倍率',
+            ChestDropEquipmentMaxQualitySwitch: '寶箱裝備最高品質開關',
+            ChuZhanZuRenShaGuaiExpShareRatio: '出戰族人擊殺經驗共享倍率',
+            CrewCountRatio: '船員數量倍率',
+            CurProfInitRatio: '精英 / Boss 初始熟練度倍率',
+            DongWuBossTenacityDamageRatio: '動物 Boss 抗性下降倍率',
+            DongWuBossTiLiDamageRatio: '動物 Boss 體力下降倍率',
+            DongWuChuZhanCount: '動物出戰數量',
+            DongWuTenacityDamageRatio: '動物抗性下降倍率',
+            DongWuTiLiDamageRatio: '動物體力下降倍率',
+            DrawDebugDungeon: '地城路線顯示開關',
+            DungeonReborn: '地城內復活開關',
+            EighthDayMaxAwarenessLevel: '第八天意識等級上限',
+            EliteEquipDropRatioCorrection: '精英裝備掉落倍率',
+            EliteEquipDurabilityCorrection: '精英裝備耐久倍率',
+            FifthDayMaxAwarenessLevel: '第五天意識等級上限',
+            FirstDayMaxAwarenessLevel: '第一天意識等級上限',
+            FourthDayMaxAwarenessLevel: '第四天意識等級上限',
+            GeRenMaxRaftSpaceCount: '個人船隻數量',
+            GeRenMaxSpecRaftSpaceCount: '個人特殊船隻數量',
+            GongHuiMaxRaftSpaceCount: '公會船隻數量',
+            GongHuiMaxSpecRaftSpaceCount: '公會特殊船隻數量',
+            InitialDefaultAwarenessLevel: '初始意識等級',
+            IsOpenGuideTask: '教學任務開關',
+            JinJianQuKaiGuan: '禁止建造區開關',
+            JiQiChuZhanKaiGuan: '機器出戰開關',
+            MainGunUseTimeCD: '主炮冷卻時間',
+            ManageModeRuQin: '管理模式入侵開關',
+            ManageModeRuQinCountDownTimeRatio: '管理模式入侵倒數倍率',
+            ManRenBossTenacityDamageRatio: '蠻人 Boss 抗性下降倍率',
+            ManRenBossTiLiDamageRatio: '蠻人 Boss 體力下降倍率',
+            ManRenTenacityDamageRatio: '蠻人抗性下降倍率',
+            ManRenTiLiDamageRatio: '蠻人體力下降倍率',
+            MaxDiCiCount: '地刺上限',
+            MaxPingTaiJianZhuNumMul: '巨象與船隻建造數量倍率',
+            MentalRecoveryRate: '情緒回復倍率',
+            NinthDayMaxAwarenessLevel: '第九天意識等級上限',
+            NormalEquipDropRatioCorrection: '普通裝備掉落倍率',
+            NormalEquipDurabilityCorrection: '普通裝備耐久倍率',
+            OpenEscMenuInfJianZao: 'ESC 無限建造開關',
+            OtherShaGuaiExpShareRatio: '其他跟隨單位擊殺經驗共享倍率',
+            PhysicalRecoveryIntervalRate: '體力恢復延遲倍率',
+            PingTaiAffectNavigation: '平台影響尋路開關',
+            PingTaiBuildRangeLimit: '巨象與船隻建造範圍限制',
+            PingTaiJianZhuNumLimit: '巨象與船隻建造數量限制',
+            PlayerDeathCantDropItemKaiGuan: '玩家死亡不掉落物品開關',
+            PlayerSweepRangeScale: 'PVE 玩家掃擊範圍倍率',
+            ReboundDifficulty: '反彈難度',
+            RuQinSucceedPrizeTimes: '入侵防守成功獎勵間隔',
+            SecondDayMaxAwarenessLevel: '第二天意識等級上限',
+            SeventhDayMaxAwarenessLevel: '第七天意識等級上限',
+            ShipBlueprintBuildConsumeSwitch: '船隻藍圖建造消耗開關',
+            SixthDayMaxAwarenessLevel: '第六天意識等級上限',
+            TenthDayMaxAwarenessLevel: '第十天意識等級上限',
+            ThirdDayMaxAwarenessLevel: '第三天意識等級上限',
+            TrainingExpRatio: '訓練場經驗倍率',
+            ZuRenDirectCunQu: '族人遠端存取開關',
             SOULMASK_LEVEL_NAME: '載入地圖名稱',
         };
 
@@ -1368,6 +1547,65 @@
             SpecialEventConfigSwitch: '伺服器特殊事件調整開關。',
             IsPlayBossAppearanceSequence: 'Boss 登場動畫開關。',
             IgnoreEnemyJianZhuInSelfYingHuo: '忽略營火範圍內敵方建築的開關。',
+            BagRepOptimizeSwitch: '啟用套件同步優化。',
+            BossEquipDropRatioCorrection: '調整 Boss 掉落裝備的倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            BossEquipDurabilityCorrection: '調整 Boss 掉落裝備的初始耐久倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            ChestDropEquipmentMaxQualitySwitch: '啟用後，寶箱掉落的裝備會是最高品質。',
+            ChuZhanZuRenShaGuaiExpShareRatio: '調整出戰族人的擊殺經驗共享倍率。',
+            CrewCountRatio: '調整船員數量倍率。',
+            CurProfInitRatio: '精英與 Boss 的初始熟練度倍率。0 代表初始值，1 代表滿值。',
+            DongWuBossTenacityDamageRatio: '調整動物 Boss 對玩家的抗性下降倍率。',
+            DongWuBossTiLiDamageRatio: '調整動物 Boss 對格擋玩家的體力下降倍率。',
+            DongWuChuZhanCount: '調整動物出戰數量。',
+            DongWuTenacityDamageRatio: '調整動物對玩家的抗性下降倍率。',
+            DongWuTiLiDamageRatio: '調整動物對格擋玩家的體力下降倍率。',
+            DrawDebugDungeon: '顯示或隱藏地城路線。',
+            DungeonReborn: '是否允許在地城內復活。',
+            EighthDayMaxAwarenessLevel: '開服第 8 天的意識等級上限。',
+            EliteEquipDropRatioCorrection: '調整精英敵人掉落裝備的倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            EliteEquipDurabilityCorrection: '調整精英敵人掉落裝備的初始耐久倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            FifthDayMaxAwarenessLevel: '開服第 5 天的意識等級上限。',
+            FirstDayMaxAwarenessLevel: '開服第 1 天的意識等級上限。',
+            FourthDayMaxAwarenessLevel: '開服第 4 天的意識等級上限。',
+            GeRenMaxRaftSpaceCount: '單一玩家可擁有的船隻數量。',
+            GeRenMaxSpecRaftSpaceCount: '單一玩家可擁有的特殊船隻數量。',
+            GongHuiMaxRaftSpaceCount: '公會可擁有的船隻數量。',
+            GongHuiMaxSpecRaftSpaceCount: '公會可擁有的特殊船隻數量。',
+            InitialDefaultAwarenessLevel: '建立角色時的初始意識等級。',
+            IsOpenGuideTask: '是否啟用教學任務。',
+            JinJianQuKaiGuan: '是否啟用禁止建造區。',
+            JiQiChuZhanKaiGuan: '是否啟用機器出戰。',
+            MainGunUseTimeCD: '主炮冷卻時間，單位為分鐘。',
+            ManageModeRuQin: '是否啟用管理模式入侵規則。',
+            ManageModeRuQinCountDownTimeRatio: '管理模式下入侵倒數時間倍率。',
+            ManRenBossTenacityDamageRatio: '蠻人 Boss 對玩家的抗性下降倍率。',
+            ManRenBossTiLiDamageRatio: '蠻人 Boss 對格擋玩家的體力下降倍率。',
+            ManRenTenacityDamageRatio: '蠻人對玩家的抗性下降倍率。',
+            ManRenTiLiDamageRatio: '蠻人對格擋玩家的體力下降倍率。',
+            MaxDiCiCount: '可建造的地刺上限。',
+            MaxPingTaiJianZhuNumMul: '巨象與船隻的最大建造數量倍率。',
+            MentalRecoveryRate: '情緒回復速度倍率。',
+            NinthDayMaxAwarenessLevel: '開服第 9 天的意識等級上限。',
+            NormalEquipDropRatioCorrection: '調整普通敵人掉落裝備的倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            NormalEquipDurabilityCorrection: '調整普通敵人掉落裝備的初始耐久倍率。PVP 下只影響超過伺服器等級上限的高階武器與防具。',
+            OpenEscMenuInfJianZao: '是否在 ESC 選單啟用無限建造模式。',
+            OtherShaGuaiExpShareRatio: '調整其他跟隨單位的擊殺經驗共享倍率。',
+            PhysicalRecoveryIntervalRate: '體力開始恢復前的延遲倍率。',
+            PingTaiAffectNavigation: '是否讓平台影響尋路。',
+            PingTaiBuildRangeLimit: '巨象與船隻建造範圍限制開關。',
+            PingTaiJianZhuNumLimit: '巨象與船隻建造數量限制開關。',
+            PlayerDeathCantDropItemKaiGuan: '是否啟用玩家死亡不掉落物品。',
+            PlayerSweepRangeScale: 'PVE 玩家掃擊範圍縮放倍率。',
+            ReboundDifficulty: 'PVE 專用的反彈難度設定。',
+            RuQinSucceedPrizeTimes: '入侵防守成功獎勵的觸發間隔。',
+            SecondDayMaxAwarenessLevel: '開服第 2 天的意識等級上限。',
+            SeventhDayMaxAwarenessLevel: '開服第 7 天的意識等級上限。',
+            ShipBlueprintBuildConsumeSwitch: '是否讓船隻藍圖建造消耗材料。',
+            SixthDayMaxAwarenessLevel: '開服第 6 天的意識等級上限。',
+            TenthDayMaxAwarenessLevel: '開服第 10 天的意識等級上限。',
+            ThirdDayMaxAwarenessLevel: '開服第 3 天的意識等級上限。',
+            TrainingExpRatio: '訓練場經驗倍率。',
+            ZuRenDirectCunQu: '是否允許族人遠端存取。',
             SOULMASK_LEVEL_NAME: '伺服器啟動時載入的地圖／關卡名稱。',
             CaiJiDiaoLuoRatio: '採集掉落倍率。',
             FaMuDiaoLuoRatio: '伐木掉落倍率。',
@@ -1514,7 +1752,9 @@
             'WuLiYouHua', 'BanGlider', 'KaiQiKuaFu', 'WarKaiGuan', 'TribalExplorationKaiGuan',
             'RuinsExplorationKaiGuan', 'SpecialBossSwitch', 'RelicChestEventSwitch', 'BossDeathEventSwitch',
             'SpecialEventConfigSwitch', 'IsPlayBossAppearanceSequence', 'JianZhuFuLanKaiGuan',
-            'JianZhuChuanSongMenPlusKaiGuan', 'ShuaXinNPCKaiGuan', 'RuQinKaiGuan', 'SuiJiRuQinKaiGuan'
+            'JianZhuChuanSongMenPlusKaiGuan', 'ShuaXinNPCKaiGuan', 'RuQinKaiGuan', 'SuiJiRuQinKaiGuan',
+            'Reborn', 'DrawDebugDungeon', 'ManageMode', 'PingTaiBuildRangeLimit', 'PingTaiJianZhuNumLimit',
+            'PingTaiAffectNavigation'
         ];
 
         function guessType(key, value) {
@@ -1665,6 +1905,119 @@
             return JSON.parse(JSON.stringify(value));
         }
 
+        function cloneRawValues(value) {
+            return value ? JSON.parse(JSON.stringify(value)) : null;
+        }
+
+        function captureRawNumericValues(jsonText) {
+            const rawValues = {};
+            const sectionRegex = /"([^\"]+)"\s*:\s*\{([\s\S]*?)\}(?=\s*,\s*"[^\"]+"\s*:|\s*}\s*$)/g;
+
+            let sectionMatch;
+            while ((sectionMatch = sectionRegex.exec(jsonText)) !== null) {
+                const sectionKey = sectionMatch[1];
+                const sectionBody = sectionMatch[2];
+                const sectionRawValues = {};
+                const valueRegex = /"([^\"]+)"\s*:\s*([-+]?(?:\d+\.\d+|\d+)(?:[eE][-+]?\d+)?)/g;
+
+                let valueMatch;
+                while ((valueMatch = valueRegex.exec(sectionBody)) !== null) {
+                    sectionRawValues[valueMatch[1]] = valueMatch[2];
+                }
+
+                rawValues[sectionKey] = sectionRawValues;
+            }
+
+            return rawValues;
+        }
+
+        function generateRawNumericValues(data) {
+            const rawValues = {};
+            for (const [sectionKey, sectionValue] of Object.entries(data || {})) {
+                const sectionRawValues = {};
+                for (const [key, value] of Object.entries(sectionValue || {})) {
+                    if (typeof value === 'number' && Number.isFinite(value)) {
+                        sectionRawValues[key] = formatNumericLiteral(value);
+                    }
+                }
+                rawValues[sectionKey] = sectionRawValues;
+            }
+            return rawValues;
+        }
+
+        function formatNumericLiteral(value) {
+            if (!Number.isFinite(value)) {
+                return '0';
+            }
+
+            if (Number.isInteger(value)) {
+                return String(value);
+            }
+
+            const precise = value.toPrecision(17);
+            return precise.replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
+        }
+
+        function getRawNumericLiteral(sectionKey, key, value) {
+            const rawLiteral = state.rawValues?.[sectionKey]?.[key];
+            if (typeof rawLiteral === 'string' && rawLiteral.length) {
+                return rawLiteral;
+            }
+
+            if (typeof value === 'number' && Number.isFinite(value)) {
+                return formatNumericLiteral(value);
+            }
+
+            return '0';
+        }
+
+        function serializeJsonValue(value, sectionKey = '', key = '', depth = 0) {
+            if (value === null) return 'null';
+
+            if (typeof value === 'string') {
+                return JSON.stringify(value);
+            }
+
+            if (typeof value === 'number') {
+                return getRawNumericLiteral(sectionKey, key, value);
+            }
+
+            if (typeof value === 'boolean') {
+                return value ? 'true' : 'false';
+            }
+
+            if (Array.isArray(value)) {
+                if (!value.length) return '[]';
+                const indent = '  '.repeat(depth);
+                const childIndent = '  '.repeat(depth + 1);
+                const items = value.map((item) => `${childIndent}${serializeJsonValue(item, sectionKey, key, depth + 1)}`);
+                return `[\n${items.join(',\n')}\n${indent}]`;
+            }
+
+            if (typeof value === 'object') {
+                const entries = Object.entries(value);
+                if (!entries.length) return '{}';
+                const indent = '  '.repeat(depth);
+                const childIndent = '  '.repeat(depth + 1);
+                const items = entries.map(([childKey, childValue]) => {
+                    const serializedValue = serializeJsonValue(childValue, sectionKey, childKey, depth + 1);
+                    return `${childIndent}${JSON.stringify(childKey)}: ${serializedValue}`;
+                });
+                return `{\n${items.join(',\n')}\n${indent}}`;
+            }
+
+            return JSON.stringify(String(value));
+        }
+
+        function serializeGameXishu(data) {
+            const entries = Object.entries(data || {});
+            const body = entries.map(([sectionKey, sectionValue]) => {
+                const serializedSection = serializeJsonValue(sectionValue, sectionKey, '', 1);
+                return `\t${JSON.stringify(sectionKey)}: ${serializedSection}`;
+            });
+            return `{\n${body.join(',\n')}\n}`;
+        }
+
         function setStatus(message, kind = '') {
             const box = document.getElementById('statusBox');
             box.className = `notice ${kind}`.trim();
@@ -1774,7 +2127,7 @@
             }
 
             let updatedFields = 0;
-            for (const section of Object.values(state.data)) {
+            for (const [sectionKey, section] of Object.entries(state.data)) {
                 for (const [key, value] of Object.entries(section)) {
                     const preset = getDifficultyPreset(key);
                     if (!preset) continue;
@@ -1782,6 +2135,10 @@
                     const nextValue = preset[presetIndex];
                     if (nextValue === undefined) continue;
                     section[key] = coercePresetValue(value, nextValue);
+                    if (!state.rawValues[sectionKey]) {
+                        state.rawValues[sectionKey] = {};
+                    }
+                    state.rawValues[sectionKey][key] = String(nextValue);
                     updatedFields += 1;
                 }
             }
@@ -1870,8 +2227,10 @@
                 updateStats();
             };
 
+            const isToggleRange = meta && getRangeSegment(meta.range, state.activeSection) === '0/1';
+
             let editor;
-            if (isBoolLike(key, value)) {
+            if (isBoolLike(key, value) || isToggleRange) {
                 editor = document.createElement('select');
                 editor.innerHTML = '<option value="1">開啟</option><option value="0">關閉</option>';
                 editor.value = String(Number(value));
@@ -1895,7 +2254,7 @@
             editor.oninput = () => {
                 let nextValue = editor.value;
                 const current = state.data[state.activeSection][key];
-                if (isBoolLike(key, current)) {
+                if (isBoolLike(key, current) || isToggleRange) {
                     nextValue = Number(editor.value);
                 } else if (typeof current === 'number') {
                     const rawValue = editor.value.trim();
@@ -1905,6 +2264,12 @@
                     nextValue = parsedValue;
                 }
                 state.data[state.activeSection][key] = nextValue;
+                if (!state.rawValues[state.activeSection]) {
+                    state.rawValues[state.activeSection] = {};
+                }
+                state.rawValues[state.activeSection][key] = isBoolLike(key, current) || isToggleRange
+                    ? String(editor.value)
+                    : String(editor.value).trim();
                 const originalValue = state.original?.[state.activeSection]?.[key];
                 const isChanged = JSON.stringify(originalValue) !== JSON.stringify(nextValue);
                 if (isChanged) state.changed.add(`${state.activeSection}.${key}`);
@@ -1996,7 +2361,9 @@
 
             state.fileName = file.name;
             state.original = clone(parsed);
+            state.originalRawValues = captureRawNumericValues(raw);
             state.data = clone(parsed);
+            state.rawValues = cloneRawValues(state.originalRawValues);
             state.activeSection = Object.keys(state.data)[0] || '0';
             state.changed.clear();
             document.getElementById('filePath').textContent = `已匯入：${state.fileName}`;
@@ -2006,35 +2373,50 @@
 
         async function loadBundledDefault() {
             setStatus('正在載入內建預設 ...');
-            const bundled = window.BUNDLED_GAMEXISHU;
-            const parsed = bundled && typeof bundled === 'object' && !Array.isArray(bundled)
-                ? clone(bundled)
-                : null;
+            const loadJson = async (path) => {
+                try {
+                    const response = await fetch(path, { cache: 'no-store' });
+                    if (!response.ok) return null;
+                    const text = await response.text();
+                    const parsed = JSON.parse(text);
+                    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+                    return { parsed, text, fileName: path.replace(/^\.\//, '') };
+                } catch {
+                    return null;
+                }
+            };
 
-            if (!parsed) {
-                const response = await fetch('./GameXishu.json', { cache: 'no-store' });
-                if (!response.ok) {
+            let loaded = await loadJson('./GameXishu.json');
+
+            if (!loaded) {
+                loaded = await loadJson('./GameXishu_New.json');
+            }
+
+            if (!loaded) {
+                const bundled = window.BUNDLED_GAMEXISHU;
+                const parsed = bundled && typeof bundled === 'object' && !Array.isArray(bundled)
+                    ? clone(bundled)
+                    : null;
+                if (!parsed) {
                     throw new Error('無法載入內建預設檔，請改用匯入 JSON');
                 }
 
-                const text = await response.text();
-                const fallbackParsed = JSON.parse(text);
-                if (!fallbackParsed || typeof fallbackParsed !== 'object' || Array.isArray(fallbackParsed)) {
-                    throw new Error('內建預設檔格式不正確');
-                }
-
-                state.fileName = 'GameXishu.json';
-                state.original = clone(fallbackParsed);
-                state.data = clone(fallbackParsed);
-            } else {
                 state.fileName = 'GameXishu.json';
                 state.original = clone(parsed);
+                state.originalRawValues = generateRawNumericValues(parsed);
                 state.data = clone(parsed);
+                state.rawValues = cloneRawValues(state.originalRawValues);
+            } else {
+                state.fileName = loaded.fileName;
+                state.original = clone(loaded.parsed);
+                state.originalRawValues = captureRawNumericValues(loaded.text);
+                state.data = clone(loaded.parsed);
+                state.rawValues = cloneRawValues(state.originalRawValues);
             }
 
             state.activeSection = Object.keys(state.data)[0] || '0';
             state.changed.clear();
-            document.getElementById('filePath').textContent = '已載入內建預設 GameXishu.json';
+            document.getElementById('filePath').textContent = `已載入內建預設 ${state.fileName}`;
             renderAll();
             setStatus('已載入內建預設，可以直接切換難度預設編輯。', 'good');
         }
@@ -2059,7 +2441,7 @@
             }
 
             const baseName = state.fileName ? state.fileName.replace(/\.json$/i, '') : 'GameXishu';
-            const blob = new Blob([JSON.stringify(state.data, null, 2) + '\n'], { type: 'application/json;charset=utf-8' });
+            const blob = new Blob([serializeGameXishu(state.data) + '\n'], { type: 'application/json;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -2078,6 +2460,7 @@
             const originalSection = state.original?.[state.activeSection];
             if (!originalSection) return;
             state.data[state.activeSection] = clone(originalSection);
+            state.rawValues[state.activeSection] = cloneRawValues(state.originalRawValues?.[state.activeSection] || {});
             rebuildChangedState();
             renderAll();
             setStatus(`已還原分組 ${state.activeSection}。`, 'warn');
