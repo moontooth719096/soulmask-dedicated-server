@@ -574,7 +574,7 @@
                 <span class="label">說明</span>
                 <div class="footerHint">
                     1. 先匯入你自己的 GameXishu.json。<br />
-                    2. 左側切換 0 / 1 / 2 三組設定。<br />
+                    2. 左側切換第 1 / 2 / 3 組設定。<br />
                     3. 右側先選 休閒 / 簡單 / 標準 / 困難 / 大師，再套用難度預設。<br />
                     4. 編輯完成後用「另存新檔」下載新 JSON。<br />
                     5. 0 / 1 類開關會盡量顯示成切換按鈕。<br />
@@ -608,7 +608,7 @@
             <section class="sectionCard">
                 <div class="sectionHeader">
                     <div>
-                        <h3 id="sectionTitle">設定分組 0</h3>
+                        <h3 id="sectionTitle">設定分組 1</h3>
                         <div class="small" id="sectionHint">正在載入設定...</div>
                     </div>
                     <div class="small" id="sectionSummary"></div>
@@ -637,7 +637,7 @@
         };
 
         const DIFFICULTY_NAMES = ['Casual', 'Easy', 'Normal', 'Hard', 'Master'];
-        const DIFFICULTY_PRESET_OFFSET = 1;
+        const DIFFICULTY_PRESET_OFFSET = 0;
         const DIFFICULTY_LABELS = {
             Casual: '休閒',
             Easy: '簡單',
@@ -646,8 +646,11 @@
             Master: '大師',
         };
 
+        const GROUP_COUNT = 3;
+        const DIFFICULTY_COUNT = DIFFICULTY_NAMES.length;
+
         const DIFFICULTY_PRESETS = {
-            AddRenKeDuRatio: ['1', '10', '2', '1', '1'],
+            AddRenKeDuRatio: ['10', '2', '1', '1', '1'],
             GameWorldDayTimePortion: ['0.9', '0.8', '0.7', '0.6', '0.5'],
             GameWorldTimePower: ['24', '24', '24', '24', '24'],
             ChongsuRatio: ['1', '0.8', '0.5', '1', '1'],
@@ -660,7 +663,7 @@
             XinQingZengZhang: ['1', '1.5', '1.5', '1', '1'],
             XinQingJianShao: ['1', '0.8', '0.8', '1', '1'],
             GongHuiMaxDongWuCount: ['50', '50', '50', '50', '50'],
-            GeRenMaxDongWuCount: ['10', '20', '10', '10', '10'],
+            GeRenMaxDongWuCount: ['50', '50', '50', '50', '50'],
             BaoXiangDiaoLuoDengJi: ['0', '0', '0', '0', '0'],
             WuLiYouHuaDist: ['6666', '6666', '6666', '6666', '6666'],
             XiuMianOfflineDays: ['7', '7', '7', '7', '7'],
@@ -672,22 +675,22 @@
             GongHuiBiaoJiMaxCount: ['20', '20', '20', '20', '20'],
             GongHuiMaxMember: ['20', '20', '20', '20', '20'],
             ZhaoHuanDisRatio: ['1', '1', '1', '1', '1'],
-            ConverPropsSpeedRatio: ['1', '5', '5', '1', '1'],
+            ConverPropsSpeedRatio: ['10', '10', '5', '5', '5'],
             MaxConvertCount: ['3', '3', '3', '3', '3'],
             KurmaFuZhongRatio: ['1', '1', '1', '1', '1'],
-            GongHuiMaxSpecDongWuCount: ['10', '1', '10', '10', '10'],
-            GeRenMaxSpecDongWuCount: ['10', '1', '10', '10', '10'],
+            GongHuiMaxSpecDongWuCount: ['5', '2', '1', '1', '1'],
+            GeRenMaxSpecDongWuCount: ['5', '2', '1', '1', '1'],
             AnimalFollowerMaxCount: ['3', '1', '3', '3', '3'],
             MaxConveyorCount: ['1000', '1000', '1000', '1000', '1000'],
             MaxDongLiKuangChangCount: ['10', '10', '10', '10', '10'],
-            ExpRatio: ['1', '4', '2', '1', '1'],
-            ChengZhangExpRatio: ['1', '5', '2', '1', '1'],
-            MJExpRatio: ['1', '5', '2', '1', '1'],
-            ShuLianDuExpRatio: ['1', '5', '2', '1', '1'],
-            CaiJiExpRatio: ['1', '4', '2', '1', '1'],
-            ZhiZuoExpRatio: ['1', '4', '2', '1', '1'],
-            ShaGuaiExpRatio: ['1', '4', '2', '1', '1'],
-            QiTaExpRatio: ['1', '4', '2', '1', '1'],
+            ExpRatio: ['4', '2', '1', '1', '1'],
+            ChengZhangExpRatio: ['5', '2', '1', '1', '1'],
+            MJExpRatio: ['5', '2', '1', '1', '1'],
+            ShuLianDuExpRatio: ['5', '2', '1', '1', '1'],
+            CaiJiExpRatio: ['4', '2', '1', '1', '1'],
+            ZhiZuoExpRatio: ['4', '2', '1', '1', '1'],
+            ShaGuaiExpRatio: ['4', '2', '1', '1', '1'],
+            QiTaExpRatio: ['4', '2', '1', '1', '1'],
             BeiDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
             ZhuDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
             ErJiShuXingRatio: ['1', '1', '1', '1', '1'],
@@ -697,44 +700,44 @@
             DongWuBeiDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
             DongWuZhuDongYiJiShuXingRatio: ['1', '1', '1', '1', '1'],
             DongWuErJiShuXingRatio: ['1', '1', '1', '1', '1'],
-            ShaGuaiExpShareRatio: ['0.2', '0.8', '0.4', '0.2', '0.2'],
-            ZuoWuDropRatio: ['1', '3', '2', '1', '1'],
-            ZuoWuShengZhangRatio: ['1', '5', '2', '1', '0.8'],
-            ZhiZuoTimeRatio: ['1', '3', '2', '1', '1'],
-            BaoXiangDropRatio: ['1', '3', '2', '1', '1'],
-            CaiJiDamageRatio: ['1', '2', '1.5', '1', '1'],
+            ShaGuaiExpShareRatio: ['0.8', '0.4', '0.2', '0.2', '0.2'],
+            ZuoWuDropRatio: ['3', '2', '1', '0.8', '0.6'],
+            ZuoWuShengZhangRatio: ['5', '2', '1', '0.8', '0.6'],
+            ZhiZuoTimeRatio: ['3', '2', '1', '1', '1'],
+            BaoXiangDropRatio: ['3', '2', '1', '1', '1'],
+            CaiJiDamageRatio: ['2', '1.5', '1', '1', '1'],
             ZiYuanShengMingRatio: ['1', '1', '1', '1', '1'],
-            DongWuShengZhangRatio: ['1', '5', '2', '1', '0.8'],
-            FanZhiJianGeRatio: ['1', '5', '2', '1', '0.8'],
-            DongWuShengChanJianGeRatio: ['1', '5', '2', '1', '0.8'],
-            DongWuChanChuRatio: ['1', '3', '2', '1', '0.8'],
+            DongWuShengZhangRatio: ['5', '2', '1', '0.8', '0.6'],
+            FanZhiJianGeRatio: ['5', '2', '1', '0.8', '0.6'],
+            DongWuShengChanJianGeRatio: ['5', '2', '1', '0.8', '0.6'],
+            DongWuChanChuRatio: ['3', '2', '1', '0.8', '0.6'],
             ZuoWuXiaoHuiRatio: ['1', '1', '1', '1', '1'],
-            FuHuaSpeed: ['1', '5', '2', '1', '0.8'],
-            JianZhuFuLanMul: ['1', '0', '0.5', '1', '1'],
-            JianZhuXiuLiMul: ['1', '5', '2', '1', '1'],
-            YeShengHitJianZhuShangHaiRatio: ['4', '1', '2', '4', '6'],
+            FuHuaSpeed: ['5', '2', '1', '0.8', '0.6'],
+            JianZhuFuLanMul: ['0', '0.5', '1', '1', '1'],
+            JianZhuXiuLiMul: ['5', '2', '1', '1', '1'],
+            YeShengHitJianZhuShangHaiRatio: ['1', '2', '4', '6', '8'],
             WanJiaHitJianZhuShangHaiRatio: ['1', '1', '1', '1', '1'],
-            YingHuoRanShaoSuDuRatio: ['1', '0.5', '0.8', '1.2', '1.5'],
+            YingHuoRanShaoSuDuRatio: ['0.5', '0.8', '1', '1.2', '1.5'],
             PVP_ShangHaiRatio_JinZhan: ['0.4', '0.4', '0.4', '0.4', '0.4'],
             PVP_ShangHaiRatio_YuanCheng: ['0.4', '0.4', '0.4', '0.4', '0.4'],
             PVP_ShangHaiRatio_PlayerToPlayer_DiFang: ['1', '1', '1', '1', '1'],
             PVP_GAPVPDamageRatio: ['1', '1', '1', '1', '1'],
             PVP_ShangHaiRatio_PlayerToPlayer_YouFang: ['0.06', '0.06', '0.06', '0.06', '0.06'],
-            RollingInvincibleTimeRatio: ['1', '1', '1', '1', '0.85'],
-            NaiJiuXiShu: ['1', '0.3', '0.6', '1', '1.1'],
-            ShiWuXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
-            ShuiXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
-            QiXiXiaoHaoRatio: ['1', '0.3', '0.6', '1', '1.5'],
-            ShengMingHuiFuRatio: ['1', '5', '2', '1', '0.8'],
-            TiLiHuiFuRatio: ['1', '3', '2', '1', '0.8'],
-            QiXiHuiFuRatio: ['1', '5', '2', '1', '1'],
+            RollingInvincibleTimeRatio: ['1', '1', '1', '0.85', '0.66'],
+            NaiJiuXiShu: ['0.3', '0.6', '1', '1.1', '1.2'],
+            ShiWuXiaoHaoRatio: ['0.3', '0.6', '1', '1.5', '2'],
+            ShuiXiaoHaoRatio: ['0.3', '0.6', '1', '1.5', '2'],
+            QiXiXiaoHaoRatio: ['0.3', '0.6', '1', '1.5', '2'],
+            ShengMingHuiFuRatio: ['5', '2', '1', '0.8', '0.5'],
+            TiLiHuiFuRatio: ['3', '2', '1', '0.8', '0.5'],
+            QiXiHuiFuRatio: ['5', '2', '1', '1', '1'],
             DongWuDamageRatio: ['1', '1', '1', '1', '1'],
             DongWuJianShangRatio: ['1', '1', '1', '1', '1'],
             MaRenDamageRatio: ['1', '1', '1', '1', '1'],
             ManRenJianShangRatio: ['1', '1', '1', '1', '1'],
             GongJiJianZhuDamageRatio: ['1', '1', '1', '1', '1'],
-            RuQinGuiMoXiShu: ['1', '0.5', '0.8', '1.5', '2'],
-            RuQinQiangDuXiShu: ['1', '0.3', '0.8', '1.2', '1.5'],
+            RuQinGuiMoXiShu: ['0.5', '0.8', '1', '1.5', '2'],
+            RuQinQiangDuXiShu: ['0.3', '0.8', '1', '1.2', '1.5'],
             RuQinGuaiCountMin: ['8', '8', '8', '12', '16'],
             RuQinGuaiCountMax: ['128', '128', '128', '160', '192'],
             RuQinPerBoGuaiMin: ['3', '3', '3', '4', '5'],
@@ -743,7 +746,7 @@
             TanChaMinuteLimit: ['20', '20', '20', '20', '20'],
             JinGongMinuteLimit: ['90', '90', '90', '90', '90'],
             LengQueMinuteLimit: ['1440', '1440', '1440', '1440', '1440'],
-            RuQinMaxChangCiCount: ['2', '1', '1', '2', '2'],
+            RuQinMaxChangCiCount: ['1', '1', '2', '2', '2'],
             RuQinBeginHour: ['0', '0', '0', '0', '0'],
             RuQinEndHour: ['24', '24', '24', '24', '24'],
             RuQinShaoChengXiShu: ['0.6', '0.6', '0.6', '0.7', '0.8'],
@@ -760,12 +763,12 @@
             PVPTimeEuropeWorkEndTime: ['24', '24', '24', '24', '24'],
             PVPTimeEuropeNoWorkStartTime: ['0', '0', '0', '0', '0'],
             PVPTimeEuropeNoWorkEndTime: ['24', '24', '24', '24', '24'],
-            AsiaWarTimeStart: ['10', '1', '1', '1', '1'],
-            AsiaWarTimeEnd: ['14', '1', '1', '1', '1'],
-            EuropeWarTimeStart: ['17', '1', '1', '1', '1'],
-            EuropeWarTimeEnd: ['21', '1', '1', '1', '1'],
-            AmericaWarTimeStart: ['0', '1', '1', '1', '1'],
-            AmericaWarTimeEnd: ['4', '1', '1', '1', '1'],
+            AsiaWarTimeStart: ['10', '10', '10', '10', '10'],
+            AsiaWarTimeEnd: ['14', '14', '14', '14', '14'],
+            EuropeWarTimeStart: ['17', '17', '17', '17', '17'],
+            EuropeWarTimeEnd: ['21', '21', '21', '21', '21'],
+            AmericaWarTimeStart: ['0', '0', '0', '0', '0'],
+            AmericaWarTimeEnd: ['4', '4', '4', '4', '4'],
             SpecialEventGameDist: ['0', '0', '0', '0', '0'],
             SpecialEventAsiaStartTime: ['10', '10', '10', '10', '10'],
             SpecialEventAsiaEndTime: ['16', '16', '16', '16', '16'],
@@ -778,10 +781,10 @@
             SpecialEventTriggetLimitNum: ['2', '2', '2', '2', '2'],
             SpecialEventServerOpenDay: ['1', '1', '1', '1', '1'],
             BinSiKaiGuan: ['1', '1', '1', '1', '0'],
-            JianZhuFuLanKaiGuan: ['1', '0', '1', '1', '1'],
-            FuHuoMoveSiWangBaoKaiGuan: ['0', '1', '0', '0', '0'],
-            JianZhuChuanSongMenPlusKaiGuan: ['1', '0', '1', '1', '1'],
-            SuiJiRuQinKaiGuan: ['1', '0', '1', '1', '1'],
+            JianZhuFuLanKaiGuan: ['0', '1', '1', '1', '1'],
+            FuHuoMoveSiWangBaoKaiGuan: ['1', '1', '0', '0', '0'],
+            JianZhuChuanSongMenPlusKaiGuan: ['1', '1', '1', '1', '1'],
+            SuiJiRuQinKaiGuan: ['0', '1', '1', '1', '1'],
             RuQinKaiGuan: ['1', '1', '1', '1', '1'],
             ShuaXinNPCKaiGuan: ['0', '0', '0', '0', '0'],
             PVEOnlyTongGuiShuCanOpenKaiGuan: ['1', '1', '1', '1', '1'],
@@ -797,7 +800,7 @@
             TeShuDaoJuDropXiShuJiaChengKaiGuan: ['0', '0', '0', '0', '0'],
             BanGlider: ['0', '0', '0', '0', '0'],
             JianZhuMirageKaiGuan: ['1', '1', '1', '1', '1'],
-            ProtectJianZhuInYingHuoSwitch: ['0', '1', '0', '0', '0'],
+            ProtectJianZhuInYingHuoSwitch: ['1', '1', '1', '1', '1'],
             SpecialEventConfigSwitch: ['0', '0', '0', '0', '0'],
             IsPlayBossAppearanceSequence: ['1', '1', '1', '1', '1'],
             IgnoreEnemyJianZhuInSelfYingHuo: ['1', '1', '1', '1', '1'],
@@ -859,25 +862,147 @@
             TenthDayMaxAwarenessLevel: ['60', '60', '60'],
             ThirdDayMaxAwarenessLevel: ['60', '60', '60'],
             TrainingExpRatio: ['1', '1', '1'],
-            ZuRenDirectCunQu: ['0', '1', '0'],
+            ZuRenDirectCunQu: ['1', '1', '0'],
+        };
+
+        const GROUP_PRESET_SPECS = {
+            AnimalFollowerMaxCount: {
+                defaultValue: '3',
+                difficultyGroups: [
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                ],
+            },
+            GeRenMaxZhaoMuCount: {
+                defaultValue: '6',
+                difficultyGroups: [
+                    ['6', '6', '6'],
+                    ['6', '6', '6'],
+                    ['6', '6', '6'],
+                    ['6', '6', '6'],
+                    ['6', '6', '6'],
+                ],
+            },
+            GeRenMaxZhaoMuCount_Two: {
+                defaultValue: '10',
+                difficultyGroups: [
+                    ['10', '10', '10'],
+                    ['10', '10', '10'],
+                    ['10', '10', '10'],
+                    ['10', '10', '10'],
+                    ['10', '10', '10'],
+                ],
+            },
+            GeRenMaxZhaoMuCount_Three: {
+                defaultValue: '15',
+                difficultyGroups: [
+                    ['15', '15', '15'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                ],
+            },
+            GongHuiMaxDongWuCount: {
+                defaultValue: '50',
+                difficultyGroups: [
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                ],
+            },
+            GeRenMaxDongWuCount: {
+                defaultValue: '10',
+                difficultyGroups: [
+                    ['10', '10', '10'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                    ['50', '50', '50'],
+                ],
+            },
+            GongHuiMaxZhaoMuCount: {
+                defaultValue: '50',
+                difficultyGroups: [
+                    ['50', '40', '50'],
+                    ['50', '40', '50'],
+                    ['50', '40', '50'],
+                    ['50', '40', '50'],
+                    ['50', '40', '50'],
+                ],
+            },
+            ChongsuRatio: {
+                defaultValue: '1',
+                difficultyGroups: [
+                    ['5', '10', '10'],
+                    ['2', '2', '2'],
+                    ['1', '1', '1'],
+                    ['0.8', '0.8', '0.8'],
+                    ['0.5', '0.5', '0.5'],
+                ],
+            },
+            ZuRenDirectCunQu: {
+                difficultyGroups: [
+                    ['0', '1', '0'],
+                    ['0', '1', '0'],
+                    ['0', '1', '0'],
+                    ['0', '1', '0'],
+                    ['0', '1', '0'],
+                ],
+            },
+            GongHuiMaxSpecDongWuCount: {
+                defaultValue: '1',
+                difficultyGroups: [
+                    ['1', '1', '1'],
+                    ['5', '5', '5'],
+                    ['2', '2', '2'],
+                    ['1', '1', '1'],
+                    ['1', '1', '1'],
+                ],
+            },
+            GeRenMaxSpecDongWuCount: {
+                defaultValue: '1',
+                difficultyGroups: [
+                    ['1', '1', '1'],
+                    ['5', '5', '5'],
+                    ['2', '2', '2'],
+                    ['1', '1', '1'],
+                    ['1', '1', '1'],
+                ],
+            },
+            ManRenChuZhanCount: {
+                defaultValue: '3',
+                difficultyGroups: [
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                    ['3', '1', '3'],
+                ],
+            },
         };
 
         const RANGE_META = {
-            AddRenKeDuRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['1', '10', '2'] },
+            AddRenKeDuRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['10', '2', '1'] },
             GameWorldDayTimePortion: { range: '0-1', presets: ['0.7', '0.8', '0.7'] },
             GameWorldTimePower: { range: '1-48 / 1-288 / 1-48', presets: ['24', '24', '24'] },
-            ChongsuRatio: { range: '0.1-10 / 0.1-100 / 0.1-10', presets: ['1', '10', '2'] },
+            ChongsuRatio: { range: '0.1-10 / 0.1-100 / 0.1-10', presets: ['5', '10', '10'] },
             ReDuXiShu: { range: '0.1-5 / 0.1-100 / 0.1-5', presets: ['1', '0.5', '0.8'] },
             XiuMianDistance: { range: '3000-16000', presets: ['10000', '10000', '10000'] },
             HuanXingDistance: { range: '2000-15100', presets: ['9000', '9000', '9000'] },
-            GongHuiMaxZhaoMuCount: { range: '1-1000', presets: ['50', '50', '50'] },
+            GongHuiMaxZhaoMuCount: { range: '1-1000', presets: ['50', '40', '50'] },
             GeRenMaxZhaoMuCount: { range: '1-10 / 1-100 / 1-10', presets: ['6', '6', '6'] },
             GeRenMaxZhaoMuCount_Two: { range: '1-20 / 1-200 / 1-20', presets: ['10', '10', '10'] },
-            GeRenMaxZhaoMuCount_Three: { range: '1-1000', presets: ['15', '15', '15'] },
-            XinQingZengZhang: { range: '0-5 / 0-10 / 0-5', presets: ['1', '1.5', '1.5'] },
-            XinQingJianShao: { range: '0-5 / 0-10 / 0-5', presets: ['1', '0.8', '0.8'] },
+            GeRenMaxZhaoMuCount_Three: { range: '1-1000', presets: ['15', '50', '50'] },
+            XinQingZengZhang: { range: '0-5 / 0-10 / 0-5', presets: ['1.5', '1.5', '1'] },
+            XinQingJianShao: { range: '0-5 / 0-10 / 0-5', presets: ['0.8', '0.8', '1'] },
             GongHuiMaxDongWuCount: { range: '1-100 / 1-1000 / 1-100', presets: ['50', '50', '50'] },
-            GeRenMaxDongWuCount: { range: '1-100 / 1-1000 / 1-100', presets: ['10', '20', '10'] },
+            GeRenMaxDongWuCount: { range: '1-100 / 1-1000 / 1-100', presets: ['10', '50', '50'] },
             CaiJiDiaoLuoRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '3', '2'] },
             FaMuDiaoLuoRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '3', '2'] },
             CaiKuangDiaoLuoRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '3', '2'] },
@@ -949,21 +1074,21 @@
             DongWuErJiShuXingRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '1', '1'] },
             ShaGuaiExpShareRatio: { range: '0-1', presets: ['0.2', '0.8', '0.4'] },
             ZuoWuDropRatio: { range: '0.5-3 / 0.5-10 / 0.5-3', presets: ['1', '3', '2'] },
-            ZuoWuShengZhangRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['1', '5', '2'] },
+            ZuoWuShengZhangRatio: { range: '0.1-10 / 0.1-1000 / 0.1-10', presets: ['5', '2', '1'] },
             ZhiZuoTimeRatio: { range: '0.1-5 / 0.1-1000 / 0.1-5', presets: ['1', '3', '2'] },
             BaoXiangDropRatio: { range: '1-3 / 1-10 / 1-3', presets: ['1', '3', '2'] },
             CaiJiDamageRatio: { range: '0-5', presets: ['1', '2', '1.5'] },
             ZiYuanShengMingRatio: { range: '0.1-3 / 0.1-10 / 0.1-3', presets: ['1', '1', '1'] },
-            DongWuShengZhangRatio: { range: '0-100 / 0-1000 / 0-100', presets: ['1', '5', '2'] },
-            FanZhiJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '5', '2'] },
-            DongWuShengChanJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['1', '5', '2'] },
-            DongWuChanChuRatio: { range: '0-3 / 0-10 / 0-3', presets: ['1', '3', '2'] },
+            DongWuShengZhangRatio: { range: '0-100 / 0-1000 / 0-100', presets: ['5', '2', '1'] },
+            FanZhiJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['5', '2', '1'] },
+            DongWuShengChanJianGeRatio: { range: '0-5 / 0-100 / 0-5', presets: ['5', '2', '1'] },
+            DongWuChanChuRatio: { range: '0-3 / 0-10 / 0-3', presets: ['3', '2', '1'] },
             ZuoWuXiaoHuiRatio: { range: '0-5 / 0-10 / 0-5', presets: ['1', '1', '1'] },
-            FuHuaSpeed: { range: '0-10 / 0-1000 / 0-10', presets: ['1', '5', '2'] },
-            JianZhuFuLanMul: { range: '0-5', presets: ['1', '0', '0.5'] },
-            JianZhuXiuLiMul: { range: '0-10', presets: ['1', '5', '2'] },
-            DamageYeShengRatio: { range: '0-10', presets: ['4', '1', '2'] },
-            BeDamageByYeShengRatio: { range: '0-10', presets: ['4', '1', '2'] },
+            FuHuaSpeed: { range: '0-10 / 0-1000 / 0-10', presets: ['5', '2', '1'] },
+            JianZhuFuLanMul: { range: '0-5', presets: ['0', '0.5', '1'] },
+            JianZhuXiuLiMul: { range: '0-10', presets: ['5', '2', '1'] },
+            DamageYeShengRatio: { range: '0-10', presets: ['1.5', '1.2', '1'] },
+            BeDamageByYeShengRatio: { range: '0-10', presets: ['0.6', '0.8', '1'] },
             JiaSiHuiFuRatio: { range: '0-10', presets: ['1', '5', '2'] },
             ZhiBeiChongShengRatio: { range: '0.1-3 / 0.1-10 / 0.1-3', presets: ['1', '3', '2'] },
             RanLiaoXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
@@ -973,7 +1098,7 @@
             ZuoWuShuiXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
             YeShengHitJianZhuShangHaiRatio: { range: '0-10', presets: ['4', '1', '2'] },
             WanJiaHitJianZhuShangHaiRatio: { range: '0-5', presets: ['1', '1', '1'] },
-            YingHuoRanShaoSuDuRatio: { range: '0-2 / 0-5 / 0-2', presets: ['1', '0.5', '0.8'] },
+            YingHuoRanShaoSuDuRatio: { range: '0-2 / 0-5 / 0-2', presets: ['0.5', '0.8', '1'] },
             HuDongExcludeBetweenCameraCharacter: { range: '0/1', presets: ['1', '1', '1'] },
             PVP_ShangHaiRatio_JinZhan: { range: '0-1', presets: ['0.4', '0.4', '0.4'] },
             PVP_ShangHaiRatio_YuanCheng: { range: '0-1', presets: ['0.4', '0.4', '0.4'] },
@@ -981,14 +1106,14 @@
             PVP_GAPVPDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
             PVP_ShangHaiRatio_WithoutP2P_YouFang: { range: '0-5', presets: ['0', '0', '0'] },
             PVP_ShangHaiRatio_PlayerToPlayer_YouFang: { range: '0-1', presets: ['0.06', '0.06', '0.06'] },
-            RollingInvincibleTimeRatio: { range: '0.5-1', presets: ['1', '1', '1'] },
-            NaiJiuXiShu: { range: '0-2', presets: ['1', '0.3', '0.6'] },
-            ShiWuXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
-            ShuiXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
-            QiXiXiaoHaoRatio: { range: '0-2', presets: ['1', '0.3', '0.6'] },
-            ShengMingHuiFuRatio: { range: '0-5 / 0-10 / 0-5', presets: ['1', '5', '2'] },
-            TiLiHuiFuRatio: { range: '0-5', presets: ['1', '3', '2'] },
-            QiXiHuiFuRatio: { range: '0-5', presets: ['1', '5', '2'] },
+            RollingInvincibleTimeRatio: { range: '0.5-1', presets: ['1', '0.85', '0.66'] },
+            NaiJiuXiShu: { range: '0-2', presets: ['0.3', '0.6', '1'] },
+            ShiWuXiaoHaoRatio: { range: '0-2', presets: ['0.3', '0.6', '1'] },
+            ShuiXiaoHaoRatio: { range: '0-2', presets: ['0.3', '0.6', '1'] },
+            QiXiXiaoHaoRatio: { range: '0-2', presets: ['0.3', '0.6', '1'] },
+            ShengMingHuiFuRatio: { range: '0-5 / 0-10 / 0-5', presets: ['5', '2', '1'] },
+            TiLiHuiFuRatio: { range: '0-5', presets: ['3', '2', '1'] },
+            QiXiHuiFuRatio: { range: '0-5', presets: ['5', '2', '1'] },
             DongWuPinZhiRatio: { range: '0-5', presets: ['1', '2', '1.5'] },
             ManRenPinZhiRatio: { range: '0-5', presets: ['1', '2', '1.5'] },
             DongWuDamageRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
@@ -996,8 +1121,8 @@
             MaRenDamageRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
             ManRenJianShangRatio: { range: '0.5-2 / 0-10 / 0.5-2', presets: ['1', '1', '1'] },
             GongJiJianZhuDamageRatio: { range: '0-5', presets: ['1', '1', '1'] },
-            RuQinGuiMoXiShu: { range: '0-10', presets: ['1', '0.5', '0.8'] },
-            RuQinQiangDuXiShu: { range: '0-10', presets: ['1', '0.3', '0.8'] },
+            RuQinGuiMoXiShu: { range: '0-10', presets: ['0.5', '0.8', '1'] },
+            RuQinQiangDuXiShu: { range: '0-10', presets: ['0.3', '0.8', '1'] },
             RuQinGuaiCountMin: { range: '1-50', presets: ['8', '8', '8'] },
             RuQinGuaiCountMax: { range: '2-256', presets: ['128', '128', '128'] },
             RuQinPerBoGuaiMin: { range: '1-50', presets: ['3', '3', '3'] },
@@ -1006,7 +1131,7 @@
             TanChaMinuteLimit: { range: '1-100', presets: ['20', '20', '20'] },
             JinGongMinuteLimit: { range: '30-120', presets: ['90', '90', '90'] },
             LengQueMinuteLimit: { range: '1-14400', presets: ['1440', '1440', '1440'] },
-            RuQinMaxChangCiCount: { range: '1-5', presets: ['2', '1', '1'] },
+            RuQinMaxChangCiCount: { range: '1-5', presets: ['1', '1', '2'] },
             RuQinBeginHour: { range: '0-23', presets: ['0', '0', '0'] },
             RuQinEndHour: { range: '1-24', presets: ['24', '24', '24'] },
             RuQinShaoChengXiShu: { range: '0-1', presets: ['0.6', '0.6', '0.6'] },
@@ -1050,10 +1175,10 @@
             HuiFuChuShiBodyData: { range: '0/1', presets: ['1', '1', '1'] },
             WanMeiChongSu: { range: '0/1', presets: ['1', '1', '1'] },
             BinSiKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
-            JianZhuFuLanKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
-            FuHuoMoveSiWangBaoKaiGuan: { range: '0/1', presets: ['0', '1', '0'] },
+            JianZhuFuLanKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
+            FuHuoMoveSiWangBaoKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
             JianZhuChuanSongMenPlusKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
-            SuiJiRuQinKaiGuan: { range: '0/1', presets: ['1', '0', '1'] },
+            SuiJiRuQinKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
             RuQinKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
             ShuaXinNPCKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
             PVEOnlyTongGuiShuCanOpenKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
@@ -1071,7 +1196,7 @@
             TeShuDaoJuDropXiShuJiaChengKaiGuan: { range: '0/1', presets: ['0', '0', '0'] },
             BanGlider: { range: '0/1', presets: ['0', '0', '0'] },
             JianZhuMirageKaiGuan: { range: '0/1', presets: ['1', '1', '1'] },
-            ProtectJianZhuInYingHuoSwitch: { range: '0/1', presets: ['0', '1', '0'] },
+            ProtectJianZhuInYingHuoSwitch: { range: '0/1', presets: ['0', '0', '0'] },
             SpecialEventConfigSwitch: { range: '0/1', presets: ['0', '0', '0'] },
             IsPlayBossAppearanceSequence: { range: '0/1', presets: ['1', '1', '1'] },
             IgnoreEnemyJianZhuInSelfYingHuo: { range: '0/1', presets: ['1', '1', '1'] },
@@ -2040,7 +2165,7 @@
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = `tab ${key === state.activeSection ? 'active' : ''}`;
-                button.textContent = `分組 ${key}`;
+                button.textContent = `分組 ${Number(key) + 1}`;
                 button.onclick = () => {
                     state.activeSection = key;
                     renderAll();
@@ -2079,8 +2204,37 @@
             });
         }
 
-        function getDifficultyPreset(key) {
-            return DIFFICULTY_PRESETS[key] || null;
+        function getGroupIndex(sectionKey) {
+            const groupIndex = Number(sectionKey);
+            return Number.isInteger(groupIndex) && groupIndex >= 0 && groupIndex < GROUP_COUNT ? groupIndex : 0;
+        }
+
+        function getPresetSpec(key) {
+            const spec = GROUP_PRESET_SPECS[key];
+            if (spec && typeof spec === 'object') {
+                return spec;
+            }
+
+            return null;
+        }
+
+        function getDifficultyPreset(key, sectionKey = state.activeSection) {
+            const spec = getPresetSpec(key);
+            if (spec?.difficultyGroups) {
+                const groupIndex = getGroupIndex(sectionKey);
+                return spec.difficultyGroups.map((difficultyRow) => difficultyRow[groupIndex]);
+            }
+
+            if (spec?.difficulties) {
+                const groupIndex = getGroupIndex(sectionKey);
+                const groupPreset = spec.difficulties[groupIndex];
+                if (Array.isArray(groupPreset) && groupPreset.length === DIFFICULTY_COUNT) {
+                    return groupPreset;
+                }
+            }
+
+            const preset = DIFFICULTY_PRESETS[key];
+            return Array.isArray(preset) && preset.length === DIFFICULTY_COUNT ? preset : null;
         }
 
         function coercePresetValue(currentValue, presetValue) {
@@ -2129,10 +2283,19 @@
             let updatedFields = 0;
             for (const [sectionKey, section] of Object.entries(state.data)) {
                 for (const [key, value] of Object.entries(section)) {
-                    const preset = getDifficultyPreset(key);
-                    if (!preset) continue;
-                    const presetIndex = Math.min(difficultyIndex + DIFFICULTY_PRESET_OFFSET, preset.length - 1);
-                    const nextValue = preset[presetIndex];
+                    const spec = getPresetSpec(key);
+                    let nextValue;
+
+                    if (spec?.difficultyGroups) {
+                        const groupIndex = getGroupIndex(sectionKey);
+                        nextValue = spec.difficultyGroups[difficultyIndex]?.[groupIndex];
+                    } else {
+                        const preset = getDifficultyPreset(key, sectionKey);
+                        if (!preset) continue;
+                        const presetIndex = difficultyIndex + DIFFICULTY_PRESET_OFFSET;
+                        nextValue = preset[presetIndex];
+                    }
+
                     if (nextValue === undefined) continue;
                     section[key] = coercePresetValue(value, nextValue);
                     if (!state.rawValues[sectionKey]) {
@@ -2186,6 +2349,14 @@
                 rangeChip.className = 'metaChip';
                 rangeChip.textContent = formatRangeDisplay(meta.range, state.activeSection);
                 metaRow.appendChild(rangeChip);
+
+                const presetSpec = getPresetSpec(key);
+                if (presetSpec?.defaultValue !== undefined) {
+                    const defaultChip = document.createElement('span');
+                    defaultChip.className = 'metaChip';
+                    defaultChip.textContent = `網站 Default：${presetSpec.defaultValue}`;
+                    metaRow.appendChild(defaultChip);
+                }
 
                 left.appendChild(metaRow);
             }
@@ -2334,7 +2505,7 @@
                 list.appendChild(renderField(key, value));
             });
 
-            document.getElementById('sectionTitle').textContent = `設定分組 ${state.activeSection}`;
+            document.getElementById('sectionTitle').textContent = `設定分組 ${Number(state.activeSection) + 1}`;
             document.getElementById('sectionHint').textContent = state.search
                 ? `搜尋關鍵字：${state.search}，目前顯示 ${rows.length} 個欄位。`
                 : `目前顯示 ${rows.length} 個欄位。`;
@@ -2429,7 +2600,7 @@
 
             const issues = collectRangeIssues();
             if (issues.length) {
-                const preview = issues.slice(0, 5).map((issue) => `分組 ${issue.sectionKey} / ${issue.key} = ${JSON.stringify(issue.value)}：${issue.message}`).join('\n');
+                const preview = issues.slice(0, 5).map((issue) => `分組 ${Number(issue.sectionKey) + 1} / ${issue.key} = ${JSON.stringify(issue.value)}：${issue.message}`).join('\n');
                 const more = issues.length > 5 ? `\n還有 ${issues.length - 5} 個欄位超出範圍。` : '';
                 const message = `偵測到設定值有異常，是否仍要匯出？\n\n${preview}${more}`;
                 const shouldContinue = window.confirm(message);
@@ -2463,7 +2634,7 @@
             state.rawValues[state.activeSection] = cloneRawValues(state.originalRawValues?.[state.activeSection] || {});
             rebuildChangedState();
             renderAll();
-            setStatus(`已還原分組 ${state.activeSection}。`, 'warn');
+            setStatus(`已還原分組 ${Number(state.activeSection) + 1}。`, 'warn');
         }
 
         async function importSelectedFile() {
