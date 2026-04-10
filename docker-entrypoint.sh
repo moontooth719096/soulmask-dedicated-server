@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 install_dir="${SOULMASK_DIR:-/opt/soulmask}"
@@ -19,15 +19,29 @@ fi
 
 ln -sfn "$saved_dir" "${install_dir}/WS/Saved"
 
+level_name="${SOULMASK_LEVEL_NAME:-Level01_Main}"
 launcher=""
 while IFS= read -r candidate; do
     launcher="$candidate"
     break
-done < <(find "$install_dir" -maxdepth 4 -type f \( -name 'StartServer.sh' -o -name 'startserver.sh' -o -name 'SoulmaskServer.sh' \) | sort)
+done < <(find "$install_dir" -maxdepth 4 -type f \( -name 'WSServer.sh' -o -name 'StartServer.sh' -o -name 'startserver.sh' -o -name 'SoulmaskServer.sh' \) | sort)
 
 if [ -z "$launcher" ]; then
     echo "Could not find a Soulmask server launcher under ${install_dir}." >&2
     exit 1
+fi
+
+launcher_name="$(basename "$launcher")"
+if [ "$launcher_name" = "StartServer.sh" ] && [ "$level_name" != "Level01_Main" ]; then
+    dlc_launcher="$(dirname "$launcher")/StartServerDLC.sh"
+    cp "$launcher" "$dlc_launcher"
+    if grep -q 'Level01_Main -server' "$dlc_launcher"; then
+        sed -i "0,/Level01_Main -server/s//${level_name} -server/" "$dlc_launcher"
+    else
+        sed -i "0,/Level01_Main/s//${level_name}/" "$dlc_launcher"
+    fi
+    chmod +x "$dlc_launcher"
+    launcher="$dlc_launcher"
 fi
 
 if [ ! -f "${config_root}/LinuxServer/Engine.ini" ]; then
@@ -55,7 +69,6 @@ server_name="${SOULMASK_SERVER_NAME:-Soulmask-Server}"
 max_players="${SOULMASK_MAX_PLAYERS:-50}"
 password="${SOULMASK_PASSWORD:-}"
 admin_password="${SOULMASK_ADMIN_PASSWORD:-}"
-level_name="${SOULMASK_LEVEL_NAME:-Level01_Main}"
 pvp_flag="-pvp"
 
 if [ "${SOULMASK_PVP:-false}" = "false" ]; then
@@ -63,7 +76,6 @@ if [ "${SOULMASK_PVP:-false}" = "false" ]; then
 fi
 
 launch_args=(
-    "${level_name}"
     "-SteamServerName=${server_name}"
     "-MaxPlayers=${max_players}"
     "-PSW=${password}"
