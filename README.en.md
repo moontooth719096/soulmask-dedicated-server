@@ -37,7 +37,7 @@ docker run -d \
 | `SOULMASK_PASSWORD` | empty string | Player password for joining the server. Leave empty for no password. |
 | `SOULMASK_ADMIN_PASSWORD` | empty string | Administrator password for server management commands. |
 | `SOULMASK_PVP` | `false` | `true` enables PvP, `false` enables PvE. |
-| `SOULMASK_LEVEL_NAME` | `Level01_Main` / `DLC_Level01_Main` | Level or map name loaded when the server starts. |
+| `SOULMASK_LEVEL_NAME` | `Level01_Main` | Level or map name loaded when the server starts. `DLC_Level01_Main` can also be used for the DLC map. |
 | `SOULMASK_PORT` | `8777` | Main gameplay connection port. |
 | `SOULMASK_QUERY_PORT` | `27015` | Steam query port used by server browsers and status queries. |
 | `SOULMASK_BACKUP_INTERVAL` | `900` | Backup interval, usually in seconds. |
