@@ -65,7 +65,7 @@ docker run -d \
 
 ## GameXishu 編輯器
 
-如果你要調整 `GameXishu.json`，可以直接用 [GameXishuEditor.html](GameXishuEditor.html) 打開：
+如果你要調整 `GameXishu.json`，可以直接用 [GameXishuEditor.html](https://moontooth719096.github.io/soulmask-dedicated-server/GameXishuEditor.html) 打開：
 
 1. 你可以直接載入內建預設，不需要先匯入檔案。
 2. 也可以匯入你自己的 `GameXishu.json`。

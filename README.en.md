@@ -63,7 +63,7 @@ You only need to mount `/data/WS/Saved` because both save files and `Config` liv
 
 ## GameXishu Editor
 
-If you want to edit `GameXishu.json`, open [GameXishuEditor.html](GameXishuEditor.html) directly:
+If you want to edit `GameXishu.json`, open [GameXishuEditor.html](https://moontooth719096.github.io/soulmask-dedicated-server/GameXishuEditor.html) directly:
 
 1. You can load the built-in default without importing any file first.
 2. You can also import your own `GameXishu.json`.
