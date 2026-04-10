@@ -8,6 +8,8 @@
 docker build -t soulmask-dedicated-server:latest .
 ```
 
+容器每次啟動或重啟時，entrypoint 會先用 SteamCMD 執行一次 `app_update`，確保伺服器程式更新到最新版本，再啟動 Soulmask server。
+
 ## Run
 
 ```bash

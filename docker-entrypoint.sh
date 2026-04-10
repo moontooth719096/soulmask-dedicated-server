@@ -3,8 +3,12 @@ set -euo pipefail
 
 install_dir="${SOULMASK_DIR:-/opt/soulmask}"
 data_dir="${SOULMASK_DATA_DIR:-/data}"
+app_id="${SOULMASK_APP_ID:-3017300}"
 saved_dir="${data_dir}/WS/Saved"
 config_root="${saved_dir}/Config"
+
+echo "Updating Soulmask server files for AppID ${app_id}..."
+/opt/steamcmd/steamcmd.sh +force_install_dir "$install_dir" +login anonymous +app_update "$app_id" validate +quit
 
 mkdir -p "${install_dir}/WS"
 mkdir -p "$saved_dir" "$config_root/LinuxServer" "$config_root/WindowsServer"

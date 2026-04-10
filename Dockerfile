@@ -6,6 +6,7 @@ ARG STEAMCMD_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux
 ENV STEAMCMD_DIR=/opt/steamcmd \
     SOULMASK_DIR=/opt/soulmask \
     SOULMASK_DATA_DIR=/data \
+    SOULMASK_APP_ID=3017300 \
     SOULMASK_SERVER_NAME=Soulmask-Server \
     SOULMASK_MAX_PLAYERS=50 \
     SOULMASK_PVP=false \
