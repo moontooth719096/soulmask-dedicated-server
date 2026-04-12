@@ -20,12 +20,16 @@ docker run -d \
   -p 27015:27015/tcp \
   -p 27015:27015/udp \
   -p 18888:18888/tcp \
+  -p 19000:19000/tcp \
   -e SOULMASK_SERVER_NAME="Soulmask Server" \
   -e SOULMASK_MAX_PLAYERS=50 \
   -e SOULMASK_PASSWORD="" \
   -e SOULMASK_ADMIN_PASSWORD="" \
   -e SOULMASK_PVP=false \
   -e SOULMASK_LEVEL_NAME=Level01_Main \
+  -e SOULMASK_RCON_PASSWORD="" \
+  -e SOULMASK_RCON_PORT=19000 \
+  -e SOULMASK_RCON_ADDR=0.0.0.0 \
   -v soulmask-data:/data/WS/Saved \
   soulmask-dedicated-server:latest
 ```
@@ -42,6 +46,9 @@ docker run -d \
 | `SOULMASK_LEVEL_NAME` | `Level01_Main` | 伺服器啟動時載入的地圖或關卡名稱。 `DLC_Level01_Main` 也可用於 DLC 地圖。 |
 | `SOULMASK_PORT` | `8777` | 遊戲主連線埠。 |
 | `SOULMASK_QUERY_PORT` | `27015` | Steam 查詢埠，用於伺服器列表與狀態查詢。 |
+| `SOULMASK_RCON_PASSWORD` | 空字串 | RCON 密碼。留空代表不啟用 RCON。 |
+| `SOULMASK_RCON_PORT` | `19000` | RCON 連線埠。 |
+| `SOULMASK_RCON_ADDR` | `0.0.0.0` | RCON 綁定位址。通常維持預設即可。 |
 | `SOULMASK_BACKUP_INTERVAL` | `900` | 備份間隔，單位通常為秒。 |
 | `SOULMASK_SAVING_INTERVAL` | `600` | 存檔間隔，單位通常為秒。 |
 
@@ -54,6 +61,9 @@ docker run -d \
 | `8777` | TCP / UDP | 玩家實際連線進遊戲的主埠。 |
 | `27015` | TCP / UDP | 伺服器查詢埠，給 Steam / server browser 使用。 |
 | `18888` | TCP | 管理埠，可用來做伺服器控制與關閉保存相關操作。 |
+| `19000` | TCP | RCON 連線埠，啟用 RCON 時使用。 |
+
+> 補充：依指南說明，RCON 需要同時設定 `-rconpsw`，並且要有可綁定的位址與 TCP 埠。這個 image 會在你設定 `SOULMASK_RCON_PASSWORD` 後，自動帶入 `-rconpsw`、`-rconport` 和 `-rconaddr`。
 
 ## 持久化
 
@@ -62,6 +72,8 @@ docker run -d \
 | `soulmask-data` | `/data/WS/Saved` | 持久化伺服器資料、設定與存檔，包含 `Config` 內容。 |
 
 容器只需要把 `/data/WS/Saved` 掛出來，因為存檔與 `Config` 都在這個資料夾底下。也就是說，重新建容器不會把世界檔和設定洗掉。
+
+如果你要開啟 RCON，只要在啟動時設定 `SOULMASK_RCON_PASSWORD`，並確認對外開放 `19000/tcp` 即可；若你改了 `SOULMASK_RCON_PORT`，對應的 port mapping 也要一起改。
 
 ## GameXishu 編輯器
 

@@ -69,6 +69,9 @@ server_name="${SOULMASK_SERVER_NAME:-Soulmask-Server}"
 max_players="${SOULMASK_MAX_PLAYERS:-50}"
 password="${SOULMASK_PASSWORD:-}"
 admin_password="${SOULMASK_ADMIN_PASSWORD:-}"
+rcon_password="${SOULMASK_RCON_PASSWORD:-}"
+rcon_port="${SOULMASK_RCON_PORT:-19000}"
+rcon_addr="${SOULMASK_RCON_ADDR:-0.0.0.0}"
 pvp_flag="-pvp"
 
 if [ "${SOULMASK_PVP:-false}" = "false" ]; then
@@ -82,5 +85,13 @@ launch_args=(
     "-adminpsw=${admin_password}"
     "${pvp_flag}"
 )
+
+if [ -n "$rcon_password" ]; then
+    launch_args+=(
+        "-rconpsw=${rcon_password}"
+        "-rconport=${rcon_port}"
+        "-rconaddr=${rcon_addr}"
+    )
+fi
 
 exec bash "$launcher" "${launch_args[@]}" "$@"

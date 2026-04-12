@@ -11,6 +11,7 @@ services:
       - "27015:27015/tcp"
       - "27015:27015/udp"
       - "18888:18888/tcp"
+      - "19000:19000/tcp"
     environment:
       SOULMASK_SERVER_NAME: "Soulmask Server"
       SOULMASK_MAX_PLAYERS: "50"
@@ -18,6 +19,9 @@ services:
       SOULMASK_ADMIN_PASSWORD: ""
       SOULMASK_PVP: "false"
       SOULMASK_LEVEL_NAME: "Level01_Main"
+      SOULMASK_RCON_PASSWORD: ""
+      SOULMASK_RCON_PORT: "19000"
+      SOULMASK_RCON_ADDR: "0.0.0.0"
     volumes:
       - soulmask-data:/data/WS/Saved
 
