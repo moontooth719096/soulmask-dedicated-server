@@ -21,7 +21,7 @@ services:
       SOULMASK_LEVEL_NAME: "Level01_Main"
       SOULMASK_RCON_PASSWORD: ""
       SOULMASK_RCON_PORT: "19000"
-      SOULMASK_RCON_ADDR: "0.0.0.0"
+      SOULMASK_RCON_ADDR: ""
     volumes:
       - soulmask-data:/data/WS/Saved
 

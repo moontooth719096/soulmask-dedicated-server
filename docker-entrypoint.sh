@@ -71,7 +71,7 @@ password="${SOULMASK_PASSWORD:-}"
 admin_password="${SOULMASK_ADMIN_PASSWORD:-}"
 rcon_password="${SOULMASK_RCON_PASSWORD:-}"
 rcon_port="${SOULMASK_RCON_PORT:-19000}"
-rcon_addr="${SOULMASK_RCON_ADDR:-0.0.0.0}"
+rcon_addr="${SOULMASK_RCON_ADDR:-}"
 pvp_flag="-pvp"
 
 if [ "${SOULMASK_PVP:-false}" = "false" ]; then
@@ -90,8 +90,10 @@ if [ -n "$rcon_password" ]; then
     launch_args+=(
         "-rconpsw=${rcon_password}"
         "-rconport=${rcon_port}"
-        "-rconaddr=${rcon_addr}"
     )
+    if [ -n "$rcon_addr" ]; then
+        launch_args+=("-rconaddr=${rcon_addr}")
+    fi
 fi
 
 exec bash "$launcher" "${launch_args[@]}" "$@"

@@ -29,7 +29,6 @@ docker run -d \
   -e SOULMASK_LEVEL_NAME=Level01_Main \
   -e SOULMASK_RCON_PASSWORD="" \
   -e SOULMASK_RCON_PORT=19000 \
-  -e SOULMASK_RCON_ADDR=0.0.0.0 \
   -v soulmask-data:/data/WS/Saved \
   soulmask-dedicated-server:latest
 ```
@@ -48,7 +47,7 @@ docker run -d \
 | `SOULMASK_QUERY_PORT` | `27015` | Steam 查詢埠，用於伺服器列表與狀態查詢。 |
 | `SOULMASK_RCON_PASSWORD` | 空字串 | RCON 密碼。留空代表不啟用 RCON。 |
 | `SOULMASK_RCON_PORT` | `19000` | RCON 連線埠。 |
-| `SOULMASK_RCON_ADDR` | `0.0.0.0` | RCON 綁定位址。通常維持預設即可。 |
+| `SOULMASK_RCON_ADDR` | 空字串 | RCON 綁定位址。留空時由伺服器使用預設綁定方式；需要指定特定介面時再填入 IP。 |
 | `SOULMASK_BACKUP_INTERVAL` | `900` | 備份間隔，單位通常為秒。 |
 | `SOULMASK_SAVING_INTERVAL` | `600` | 存檔間隔，單位通常為秒。 |
 
@@ -63,7 +62,7 @@ docker run -d \
 | `18888` | TCP | 管理埠，可用來做伺服器控制與關閉保存相關操作。 |
 | `19000` | TCP | RCON 連線埠，啟用 RCON 時使用。 |
 
-> 補充：依指南說明，RCON 需要同時設定 `-rconpsw`，並且要有可綁定的位址與 TCP 埠。這個 image 會在你設定 `SOULMASK_RCON_PASSWORD` 後，自動帶入 `-rconpsw`、`-rconport` 和 `-rconaddr`。
+> 補充：依指南說明，RCON 需要同時設定 `-rconpsw`，並且可以搭配綁定位址與 TCP 埠。這個 image 會在你設定 `SOULMASK_RCON_PASSWORD` 後，自動帶入 `-rconpsw`、`-rconport`，而 `-rconaddr` 只有在你有填 `SOULMASK_RCON_ADDR` 時才會加入。
 
 ## 持久化
 

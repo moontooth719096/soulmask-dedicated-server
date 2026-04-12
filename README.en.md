@@ -27,7 +27,6 @@ docker run -d \
   -e SOULMASK_LEVEL_NAME=Level01_Main \
   -e SOULMASK_RCON_PASSWORD="" \
   -e SOULMASK_RCON_PORT=19000 \
-  -e SOULMASK_RCON_ADDR=0.0.0.0 \
   -v soulmask-data:/data/WS/Saved \
   soulmask-dedicated-server:latest
 ```
@@ -46,7 +45,7 @@ docker run -d \
 | `SOULMASK_QUERY_PORT` | `27015` | Steam query port used by server browsers and status queries. |
 | `SOULMASK_RCON_PASSWORD` | empty string | RCON password. Leave empty to disable RCON. |
 | `SOULMASK_RCON_PORT` | `19000` | RCON connection port. |
-| `SOULMASK_RCON_ADDR` | `0.0.0.0` | RCON bind address. The default is usually fine. |
+| `SOULMASK_RCON_ADDR` | empty string | RCON bind address. Leave it blank to use the server's default bind behavior; fill in an IP only when you need a specific interface. |
 | `SOULMASK_BACKUP_INTERVAL` | `900` | Backup interval, usually in seconds. |
 | `SOULMASK_SAVING_INTERVAL` | `600` | Save interval, usually in seconds. |
 
@@ -61,7 +60,7 @@ docker run -d \
 | `18888` | TCP | Management port used for server control and save/close operations. |
 | `19000` | TCP | RCON connection port used when RCON is enabled. |
 
-> Note: Per the guide, RCON requires `-rconpsw` plus a bind address and TCP port. This image automatically adds `-rconpsw`, `-rconport`, and `-rconaddr` once you set `SOULMASK_RCON_PASSWORD`.
+> Note: Per the guide, RCON requires `-rconpsw` and can optionally use a bind address and TCP port. This image automatically adds `-rconpsw` and `-rconport` once you set `SOULMASK_RCON_PASSWORD`, and only adds `-rconaddr` when `SOULMASK_RCON_ADDR` is provided.
 
 ## Persistence
 
